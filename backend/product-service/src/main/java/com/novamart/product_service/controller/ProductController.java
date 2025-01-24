@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/product")
+@RequestMapping("/api/products")
 @AllArgsConstructor
 public class ProductController {
     private final ProductService productService;
 
-    @PostMapping
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public void createProduct(@RequestBody ProductRequest productRequest) {
         productService.createProduct(productRequest);
@@ -25,5 +25,16 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
+    }
+
+    @GetMapping("/{productId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Product getProduct(@RequestParam String productId) {
+        return productService.getProduct(productId);
+    }
+
+    @DeleteMapping("/clear")
+    public void clearAllProducts() {
+        productService.clearAllProducts();
     }
 }

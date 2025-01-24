@@ -2,11 +2,13 @@ package com.novamart.product_service.service;
 
 import com.novamart.product_service.dto.ProductRequest;
 import com.novamart.product_service.model.Product;
+import com.novamart.product_service.model.Reviews;
 import com.novamart.product_service.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,17 +17,17 @@ import java.util.List;
 public class ProductService {
     private final ProductRepository productRepository;
     public void createProduct(ProductRequest productRequest) {
+        List<Reviews> reviews = new ArrayList<>();
         Product product = Product.builder()
                 .name(productRequest.name())
-                .product_id(productRequest.product_id())
                 .description(productRequest.description())
                 .price(productRequest.price())
                 .currency_code(productRequest.currency_code())
                 .categories(productRequest.categories())
-                .reviews(productRequest.reviews())
-                .created_at(productRequest.created_at())
-                .updated_at(productRequest.updated_at())
-                .status(productRequest.status())
+                .reviews(reviews)
+                .created_at(System.currentTimeMillis())
+                .updated_at(System.currentTimeMillis())
+                .status("PENDING")
                 .attributes(productRequest.attributes())
                 .build();
         productRepository.save(product);
@@ -34,5 +36,13 @@ public class ProductService {
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    public Product getProduct(String product_id) {
+        return productRepository.findByProductId(product_id);
+    }
+
+    public void clearAllProducts() {
+        productRepository.deleteAll();
     }
 }

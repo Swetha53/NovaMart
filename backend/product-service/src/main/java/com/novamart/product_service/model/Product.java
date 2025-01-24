@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
 
 @Document(value = "product")
 @AllArgsConstructor
@@ -23,10 +23,10 @@ public class Product {
     private String description;
     private BigDecimal price;
     private String currency_code;
-    private Object categories;
-    private Object reviews;
-    private Timestamp created_at;
-    private Timestamp updated_at;
+    private List<String> categories;
+    private List<Reviews> reviews;
+    private long created_at;
+    private long updated_at;
     private String status;
-    private Array attributes;
+    private Object attributes;
 }
