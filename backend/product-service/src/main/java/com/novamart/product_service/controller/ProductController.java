@@ -33,6 +33,12 @@ public class ProductController {
         return productService.getProduct(productId);
     }
 
+    @GetMapping("/{merchantId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Product getMerchantProducts(@RequestParam String merchantId) {
+        return productService.getMerchantProducts(merchantId);
+    }
+
     @DeleteMapping("/clear")
     public void clearAllProducts() {
         productService.clearAllProducts();

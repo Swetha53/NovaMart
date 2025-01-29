@@ -18,15 +18,16 @@ import java.util.List;
 @Data
 public class Product {
     @Id
-    private String product_id;
+    private String productId;
+    private String merchantId;
     private String name;
     private String description;
     private BigDecimal price;
-    private String currency_code;
+    private String currencyCode;
     private List<String> categories;
     private List<Reviews> reviews;
-    private long created_at;
-    private long updated_at;
+    private long createdAt;
+    private long updatedAt;
     private String status;
     private Object attributes;
 }

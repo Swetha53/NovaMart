@@ -14,9 +14,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 public class Reviews {
     @Id
-    private String review_id;
-    private String user_id;
+    private String reviewId;
+    private String userId;
+    private String merchantId;
     private String title;
     private String comment;
-    private String image_url;
+    private String imageUrl;
 }

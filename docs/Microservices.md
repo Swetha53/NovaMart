@@ -34,8 +34,13 @@
 2. **Database**: MongoDB
 3. **REST API**:
    1. /products
+      - Get all products
    2. /products/{ID}
+      - Get product by ID
    3. /products/create
+      - Create new product
+   4. /products/{merchantId}
+      - Get all products by merchant
 4. **Responsibilities**:
    1. Shows accurate product details [Inventory]
    2. Manages product catalog including their status
@@ -122,7 +127,13 @@
 2. **Database**: MySQL
 3. **REST API**:
    1. /orders
+      - Get all orders
    2. /orders/{ID}
+      - Get order by ID
+   3. /orders/create
+      - Place order
+   4. /orders/{merchantId}
+      - Get all orders by merchant
 4. **Responsibilities**:
    1. Processes orders and tracks order status
    2. Stores order details

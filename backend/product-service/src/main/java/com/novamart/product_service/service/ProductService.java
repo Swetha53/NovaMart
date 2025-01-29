@@ -19,14 +19,15 @@ public class ProductService {
     public void createProduct(ProductRequest productRequest) {
         List<Reviews> reviews = new ArrayList<>();
         Product product = Product.builder()
+                .merchantId(productRequest.merchantId())
                 .name(productRequest.name())
                 .description(productRequest.description())
                 .price(productRequest.price())
-                .currency_code(productRequest.currency_code())
+                .currencyCode(productRequest.currencyCode())
                 .categories(productRequest.categories())
                 .reviews(reviews)
-                .created_at(System.currentTimeMillis())
-                .updated_at(System.currentTimeMillis())
+                .createdAt(System.currentTimeMillis())
+                .updatedAt(System.currentTimeMillis())
                 .status("PENDING")
                 .attributes(productRequest.attributes())
                 .build();
@@ -38,8 +39,12 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product getProduct(String product_id) {
-        return productRepository.findByProductId(product_id);
+    public Product getProduct(String productId) {
+        return productRepository.findByProductId(productId);
+    }
+
+    public Product getMerchantProducts(String merchantId) {
+        return productRepository.findByMerchantId(merchantId);
     }
 
     public void clearAllProducts() {
