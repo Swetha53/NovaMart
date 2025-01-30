@@ -126,14 +126,16 @@
 1. **Programming Language**: Java
 2. **Database**: MySQL
 3. **REST API**:
-   1. /orders
-      - Get all orders
-   2. /orders/{ID}
-      - Get order by ID
-   3. /orders/create
+   1. /orders/create
       - Place order
+   2. /orders/{userId}
+      - Get all orders by user
+   3. /orders/status/{ID}
+      - Get order status history
    4. /orders/{merchantId}
-      - Get all orders by merchant
+        - Get all orders by merchant
+   5. /orders/{ID}
+      - Get order by ID ?????
 4. **Responsibilities**:
    1. Processes orders and tracks order status
    2. Stores order details

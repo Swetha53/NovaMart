@@ -1,8 +1,6 @@
 package com.novamart.order_service.controller;
 
 import com.novamart.order_service.dto.OrderRequest;
-import com.novamart.order_service.dto.UserOrderResponse;
-import com.novamart.order_service.model.OrderItem;
 import com.novamart.order_service.model.StatusHistory;
 import com.novamart.order_service.service.OrderService;
 import lombok.AllArgsConstructor;
