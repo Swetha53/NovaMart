@@ -17,6 +17,7 @@
         </processorPath>
         <module name="product-service" />
         <module name="cart-service" />
+        <module name="payment-service" />
         <module name="order-service" />
       </profile>
     </annotationProcessing>
@@ -25,6 +26,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="cart-service" options="-parameters" />
       <module name="order-service" options="-parameters" />
+      <module name="payment-service" options="-parameters" />
       <module name="product-service" options="-parameters" />
     </option>
   </component>
