@@ -22,6 +22,7 @@ public class ProductService {
                 .merchantId(productRequest.merchantId())
                 .name(productRequest.name())
                 .description(productRequest.description())
+                .images(productRequest.images())
                 .price(productRequest.price())
                 .currencyCode(productRequest.currencyCode())
                 .categories(productRequest.categories())

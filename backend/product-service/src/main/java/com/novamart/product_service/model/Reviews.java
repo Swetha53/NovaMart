@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.List;
 
 @Document(value = "product")
 @AllArgsConstructor
@@ -17,7 +18,9 @@ public class Reviews {
     private String reviewId;
     private String userId;
     private String merchantId;
+    private String productId;
     private String title;
     private String comment;
-    private String imageUrl;
+    private List<String> imageUrl;
+    private int rating;
 }
