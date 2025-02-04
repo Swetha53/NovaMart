@@ -60,4 +60,8 @@ public class ReviewService {
         reviewRepository.delete(review);
         log.info("delete review");
     }
+
+    public void deleteAllReviews() {
+        reviewRepository.deleteAll();
+    }
 }

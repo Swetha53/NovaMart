@@ -5,6 +5,7 @@ import com.novamart.payment_service.model.Payment;
 import com.novamart.payment_service.respository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -12,6 +13,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PaymentService {
     private final PaymentRepository paymentRepository;
+    private final RefundService refundService;
 
     public void savePayment(PaymentRequest paymentRequest) {
         Payment payment = new Payment();
@@ -30,5 +32,11 @@ public class PaymentService {
 
     public Payment getPaymentByOrderId(String orderId) {
         return paymentRepository.findByOrderId(orderId);
+    }
+
+    @Transactional
+    public void deleteAllPayments() {
+        refundService.deleteAllRefunds();
+        paymentRepository.deleteAll();
     }
 }

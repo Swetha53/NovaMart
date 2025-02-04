@@ -49,4 +49,11 @@ public class ReviewController {
     public void deleteReview(@RequestParam String reviewId) {
         reviewService.deleteReview(reviewId);
     }
+
+    @DeleteMapping("/delete-all")
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteAllReviews() {
+        reviewService.deleteAllReviews();
+        return "All reviews deleted";
+    }
 }

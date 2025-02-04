@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/users")
 @AllArgsConstructor
@@ -49,5 +51,25 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteUser(@RequestParam String userId) {
         userService.deleteUser(userId);
+    }
+
+    @GetMapping("/authenticate")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean authenticateUser(@RequestParam String userId, @RequestParam String checkField,
+                                    @RequestParam String value) {
+        return userService.authenticateUser(userId, checkField, value);
+    }
+
+    @DeleteMapping("/delete-all")
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteAllUsers() {
+        userService.deleteAllUsers();
+        return "All users deleted successfully";
+    }
+
+    @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 }

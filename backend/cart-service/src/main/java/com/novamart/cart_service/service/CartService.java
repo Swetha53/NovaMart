@@ -94,4 +94,10 @@ public class CartService {
         cart.setTotalAmount(calculateTotalAmount(new BigDecimal(0), cartItems));
         cartRepository.save(cart);
     }
+
+    @Transactional
+    public void deleteAllCarts() {
+        cartItemRepository.deleteAll();
+        cartRepository.deleteAll();
+    }
 }

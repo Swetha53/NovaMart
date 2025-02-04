@@ -42,8 +42,20 @@ public class OrderController {
         return orderService.getOrderStatusHistory(orderId);
     }
 
+    @PutMapping("/cancel")
+    @ResponseStatus(HttpStatus.OK)
+    public String cancelOrder(@RequestParam String orderId, @RequestParam String userId) {
+        return orderService.cancelOrder(orderId, userId);
+    }
+
+    @PutMapping("/deliver")
+    @ResponseStatus(HttpStatus.OK)
+    public String deliverOrder(@RequestParam String orderId) {
+        return orderService.deliverOrder(orderId);
+    }
+
     @DeleteMapping("/clear")
-    public void clearOrders() {
-        orderService.clearOrders();
+    public void clearOrders(@RequestParam String userId) {
+        orderService.clearOrders(userId);
     }
 }

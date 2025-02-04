@@ -103,4 +103,26 @@ public class UserService {
         userRepository.delete(user);
         log.info("User deleted successfully");
     }
+
+    public boolean authenticateUser(String userId, String checkField, String value) {
+        User user = userRepository.findByUserId(userId);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        if (checkField.equals("role")) {
+            return user.getRoles().contains(value);
+        } else if (checkField.equals("accountType")) {
+            return user.getAccountType().equals(value);
+        } else {
+            throw new RuntimeException("Invalid checkField");
+        }
+    }
+
+    public void deleteAllUsers() {
+        userRepository.deleteAll();
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 }

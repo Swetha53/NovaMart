@@ -40,4 +40,11 @@ public class CartController {
         cartService.deleteCartItem(userId, productId);
         return "Cart Item " + productId + " Deleted Successfully";
     }
+
+    @DeleteMapping("/delete-all")
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteAllCarts() {
+        cartService.deleteAllCarts();
+        return "All Carts Deleted Successfully";
+    }
 }

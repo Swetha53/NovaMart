@@ -18,7 +18,6 @@ public class Order {
     @Id
     private String orderId;
     private String userId;
-    private String paymentId;
     private String status;
     private BigDecimal totalAmount;
     private String currencyCode;

@@ -41,4 +41,11 @@ public class ReservationController {
         reservationService.deleteReservation(orderId, productId);
         return "Reservation Deleted Successfully";
     }
+
+    @DeleteMapping("/delete-all")
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteAllReservations() {
+        reservationService.deleteAllReservations();
+        return "All Reservations Deleted Successfully";
+    }
 }

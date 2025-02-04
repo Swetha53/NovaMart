@@ -17,14 +17,14 @@ public class InventoryController {
     @ResponseStatus(HttpStatus.CREATED)
     public String createProductInventory(@RequestBody InventoryRequest inventoryRequest) {
         inventoryService.createProductInventory(inventoryRequest);
-        return "Product Inventory Created Successfully";
+        return "Product " + inventoryRequest.productId() + " Created Successfully";
     }
 
     @PutMapping("/restock")
     @ResponseStatus(HttpStatus.OK)
     public String restockInventory(@RequestParam String productId, @RequestParam long quantity) {
         inventoryService.restockInventory(productId, quantity);
-        return "Product Inventory Restocked Successfully";
+        return "Product " + productId + " Restocked Successfully";
     }
 
     @GetMapping
@@ -37,20 +37,27 @@ public class InventoryController {
     @ResponseStatus(HttpStatus.OK)
     public String reserveInventory(@RequestParam String productId, @RequestParam long quantity) {
         inventoryService.reserveInventory(productId, quantity);
-        return "Product Inventory Reserved Successfully";
+        return "Product " + productId + " Reserved Successfully";
     }
 
     @PutMapping("/sell")
     @ResponseStatus(HttpStatus.OK)
     public String sellInventory(@RequestParam String productId, @RequestParam long quantity) {
         inventoryService.sellInventory(productId, quantity);
-        return "Product Inventory Sold Successfully";
+        return "Product " + productId + " Sold Successfully";
     }
 
     @PutMapping("/release")
     @ResponseStatus(HttpStatus.OK)
     public String releaseInventory(@RequestParam String productId, @RequestParam long quantity) {
         inventoryService.releaseInventory(productId, quantity);
-        return "Product Inventory Released Successfully";
+        return "Product " + productId + " Released Successfully";
+    }
+
+    @DeleteMapping("/delete-all")
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteAllInventory() {
+        inventoryService.deleteAllInventory();
+        return "All Inventory Deleted Successfully";
     }
 }

@@ -39,4 +39,9 @@ public class ReservationService {
     public void deleteReservation(String orderId, String productId) {
         reservationRepository.deleteByOrderIdAndProductId(orderId, productId);
     }
+
+    @Transactional
+    public void deleteAllReservations() {
+        reservationRepository.deleteAll();
+    }
 }

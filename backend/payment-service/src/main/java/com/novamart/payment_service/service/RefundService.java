@@ -5,6 +5,7 @@ import com.novamart.payment_service.model.Refund;
 import com.novamart.payment_service.respository.RefundRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -42,5 +43,10 @@ public class RefundService {
         refund.setStatus("PROCESSED");
         refund.setProcessedAt(System.currentTimeMillis());
         refundRepository.save(refund);
+    }
+
+    @Transactional
+    public void deleteAllRefunds() {
+        refundRepository.deleteAll();
     }
 }

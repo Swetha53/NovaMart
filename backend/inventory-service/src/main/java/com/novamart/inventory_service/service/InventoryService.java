@@ -68,4 +68,9 @@ public class InventoryService {
         inventory.setLastUpdated(System.currentTimeMillis());
         inventoryRepository.save(inventory);
     }
+//    TODO connect to reservation service
+
+    public void deleteAllInventory() {
+        inventoryRepository.deleteAll();
+    }
 }

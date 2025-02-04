@@ -25,4 +25,11 @@ public class PaymentController {
     public Payment getPaymentByOrderId(@RequestParam String orderId) {
         return paymentService.getPaymentByOrderId(orderId);
     }
+
+    @DeleteMapping("/delete-all")
+    @ResponseStatus(HttpStatus.OK)
+    public String deleteAllPayments() {
+        paymentService.deleteAllPayments();
+        return "All Payment and Refund Records Deleted Successfully";
+    }
 }
