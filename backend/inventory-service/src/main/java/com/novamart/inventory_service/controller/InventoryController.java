@@ -1,6 +1,7 @@
 package com.novamart.inventory_service.controller;
 
 import com.novamart.inventory_service.dto.InventoryRequest;
+import com.novamart.inventory_service.dto.ReserveInventoryRequest;
 import com.novamart.inventory_service.model.Inventory;
 import com.novamart.inventory_service.service.InventoryService;
 import lombok.AllArgsConstructor;
@@ -35,22 +36,24 @@ public class InventoryController {
 
     @PutMapping("/reserve")
     @ResponseStatus(HttpStatus.OK)
-    public String reserveInventory(@RequestParam String productId, @RequestParam long quantity) {
-        inventoryService.reserveInventory(productId, quantity);
-        return "Product " + productId + " Reserved Successfully";
+    public String reserveInventory(@RequestBody ReserveInventoryRequest reserveInventoryRequest) {
+        inventoryService.reserveInventory(reserveInventoryRequest);
+        return "Product " + reserveInventoryRequest.productId() + " Reserved Successfully";
     }
 
     @PutMapping("/sell")
     @ResponseStatus(HttpStatus.OK)
-    public String sellInventory(@RequestParam String productId, @RequestParam long quantity) {
-        inventoryService.sellInventory(productId, quantity);
+    public String sellInventory(@RequestParam String orderId, @RequestParam String productId,
+                                @RequestParam long quantity) {
+        inventoryService.sellInventory(orderId, productId, quantity);
         return "Product " + productId + " Sold Successfully";
     }
 
     @PutMapping("/release")
     @ResponseStatus(HttpStatus.OK)
-    public String releaseInventory(@RequestParam String productId, @RequestParam long quantity) {
-        inventoryService.releaseInventory(productId, quantity);
+    public String releaseInventory(@RequestParam String orderId, @RequestParam String productId,
+                                   @RequestParam long quantity) {
+        inventoryService.releaseInventory(orderId, productId, quantity);
         return "Product " + productId + " Released Successfully";
     }
 

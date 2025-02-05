@@ -22,14 +22,14 @@ public class PaymentController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Payment getPaymentByOrderId(@RequestParam String orderId) {
-        return paymentService.getPaymentByOrderId(orderId);
+    public Payment getPaymentByOrderId(@RequestParam String orderId, @RequestParam String userId) {
+        return paymentService.getPaymentByOrderId(orderId, userId);
     }
 
     @DeleteMapping("/delete-all")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteAllPayments() {
-        paymentService.deleteAllPayments();
+    public String deleteAllPayments(@RequestParam String userId) {
+        paymentService.deleteAllPayments(userId);
         return "All Payment and Refund Records Deleted Successfully";
     }
 }

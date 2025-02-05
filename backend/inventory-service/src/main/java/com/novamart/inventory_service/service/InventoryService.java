@@ -1,6 +1,8 @@
 package com.novamart.inventory_service.service;
 
 import com.novamart.inventory_service.dto.InventoryRequest;
+import com.novamart.inventory_service.dto.ReservationRequest;
+import com.novamart.inventory_service.dto.ReserveInventoryRequest;
 import com.novamart.inventory_service.model.Inventory;
 import com.novamart.inventory_service.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,10 +10,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+// TODO connect with reservation
+
 @Service
 @RequiredArgsConstructor
 public class InventoryService {
     private final InventoryRepository inventoryRepository;
+    private final ReservationService reservationService;
 
     public void createProductInventory(InventoryRequest inventoryRequest) {
         Inventory inventory = new Inventory();
@@ -37,15 +42,24 @@ public class InventoryService {
         return inventoryRepository.findByProductId(productId);
     }
 
-    public void reserveInventory(String productId, long quantity) {
-        Inventory inventory = inventoryRepository.findByProductId(productId);
-        inventory.setQuantityAvailable(inventory.getQuantityAvailable() - quantity);
-        inventory.setQuantityReserved(inventory.getQuantityReserved() + quantity);
+    public void reserveInventory(ReserveInventoryRequest reserveInventoryRequest) {
+        Inventory inventory = inventoryRepository.findByProductId(reserveInventoryRequest.productId());
+        inventory.setQuantityAvailable(inventory.getQuantityAvailable() - reserveInventoryRequest.quantity());
+        inventory.setQuantityReserved(inventory.getQuantityReserved() + reserveInventoryRequest.quantity());
         inventory.setLastUpdated(System.currentTimeMillis());
         inventoryRepository.save(inventory);
+
+        ReservationRequest reservationRequest = new ReservationRequest(
+                reserveInventoryRequest.orderId(),
+                reserveInventoryRequest.userId(),
+                inventory.getInventoryId(),
+                reserveInventoryRequest.productId(),
+                reserveInventoryRequest.quantity()
+        );
+        reservationService.createReservation(reservationRequest);
     }
 
-    public void sellInventory(String productId, long quantity) {
+    public void sellInventory(String orderId, String productId, long quantity) {
         Inventory inventory = inventoryRepository.findByProductId(productId);
         long reservedStock = inventory.getQuantityReserved();
         if (reservedStock < quantity) {
@@ -55,9 +69,11 @@ public class InventoryService {
         inventory.setQuantitySold(inventory.getQuantitySold() + quantity);
         inventory.setLastUpdated(System.currentTimeMillis());
         inventoryRepository.save(inventory);
+
+        reservationService.deleteReservation(orderId, productId);
     }
 
-    public void releaseInventory(String productId, long quantity) {
+    public void releaseInventory(String orderId, String productId, long quantity) {
         Inventory inventory = inventoryRepository.findByProductId(productId);
         long reservedStock = inventory.getQuantityReserved();
         if (reservedStock < quantity) {
@@ -67,10 +83,12 @@ public class InventoryService {
         inventory.setQuantityAvailable(inventory.getQuantityAvailable() + quantity);
         inventory.setLastUpdated(System.currentTimeMillis());
         inventoryRepository.save(inventory);
+
+        reservationService.deleteReservation(orderId, productId);
     }
-//    TODO connect to reservation service
 
     public void deleteAllInventory() {
+        reservationService.deleteAllReservations();
         inventoryRepository.deleteAll();
     }
 }

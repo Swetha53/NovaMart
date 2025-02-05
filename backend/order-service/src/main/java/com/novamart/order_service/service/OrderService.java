@@ -3,6 +3,7 @@ package com.novamart.order_service.service;
 import com.novamart.order_service.client.InventoryClient;
 import com.novamart.order_service.client.UserClient;
 import com.novamart.order_service.dto.OrderRequest;
+import com.novamart.order_service.dto.ReservationRequest;
 import com.novamart.order_service.dto.UserOrderResponse;
 import com.novamart.order_service.model.Order;
 import com.novamart.order_service.model.OrderItem;
@@ -57,7 +58,13 @@ public class OrderService {
 
                 orderItemList.add(orderItem);
 
-                log.info(inventoryClient.reserveInventory(orderRequestItem.getProductId(), orderRequestItem.getQuantity()));
+                ReservationRequest reservationRequest = new ReservationRequest(
+                        order.getOrderId(),
+                        order.getUserId(),
+                        orderItem.getProductId(),
+                        orderItem.getQuantity()
+                );
+                log.info(inventoryClient.reserveInventory(reservationRequest));
             }
 
     //        Save Order Status History Details
@@ -119,7 +126,11 @@ public class OrderService {
 
         List<OrderItem> orderItems = orderItemRepository.findByOrderId(order.getOrderId());
         for (OrderItem orderItem : orderItems) {
-            log.info(inventoryClient.sellInventory(orderItem.getProductId(), orderItem.getQuantity()));
+            log.info(
+                    inventoryClient.sellInventory(
+                            order.getOrderId(), orderItem.getProductId(), orderItem.getQuantity()
+                    )
+            );
         }
 
         StatusHistory statusHistory = new StatusHistory();
@@ -153,7 +164,11 @@ public class OrderService {
 
         List<OrderItem> orderItems = orderItemRepository.findByOrderId(order.getOrderId());
         for (OrderItem orderItem : orderItems) {
-            log.info(inventoryClient.releaseInventory(orderItem.getProductId(), orderItem.getQuantity()));
+            log.info(
+                    inventoryClient.releaseInventory(
+                            order.getOrderId(), orderItem.getProductId(), orderItem.getQuantity()
+                    )
+            );
         }
 
         StatusHistory statusHistory = new StatusHistory();

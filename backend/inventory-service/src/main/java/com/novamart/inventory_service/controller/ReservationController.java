@@ -14,13 +14,6 @@ import org.springframework.web.bind.annotation.*;
 public class ReservationController {
     private final ReservationService reservationService;
 
-    @PostMapping("/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public String createReservation(@RequestBody ReservationRequest reservationRequest) {
-        reservationService.createReservation(reservationRequest);
-        return "Reservation Created Successfully";
-    }
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Reservation getReservation(@RequestParam(required = false) String orderId,
@@ -33,19 +26,5 @@ public class ReservationController {
         } else {
             throw new RuntimeException("Invalid request");
         }
-    }
-
-    @DeleteMapping("/delete")
-    @ResponseStatus(HttpStatus.OK)
-    public String deleteReservation(@RequestParam String orderId, @RequestParam String productId) {
-        reservationService.deleteReservation(orderId, productId);
-        return "Reservation Deleted Successfully";
-    }
-
-    @DeleteMapping("/delete-all")
-    @ResponseStatus(HttpStatus.OK)
-    public String deleteAllReservations() {
-        reservationService.deleteAllReservations();
-        return "All Reservations Deleted Successfully";
     }
 }

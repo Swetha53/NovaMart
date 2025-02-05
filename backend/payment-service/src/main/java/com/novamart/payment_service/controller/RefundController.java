@@ -4,7 +4,6 @@ import com.novamart.payment_service.dto.RefundRequest;
 import com.novamart.payment_service.model.Refund;
 import com.novamart.payment_service.service.RefundService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +28,8 @@ public class RefundController {
 
     @PutMapping("/process")
     @ResponseStatus(HttpStatus.OK)
-    public String processRefund(@RequestParam String refundId) {
-        refundService.processRefund(refundId);
+    public String processRefund(@RequestParam String refundId, @RequestParam String merchantId) {
+        refundService.processRefund(refundId, merchantId);
         return "Refund Processed Successfully";
     }
 }

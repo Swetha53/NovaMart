@@ -1,5 +1,6 @@
 package com.novamart.payment_service.service;
 
+import com.novamart.payment_service.client.UserClient;
 import com.novamart.payment_service.dto.RefundRequest;
 import com.novamart.payment_service.model.Refund;
 import com.novamart.payment_service.respository.RefundRepository;
@@ -13,8 +14,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RefundService {
     private final RefundRepository refundRepository;
+    private final UserClient userClient;
 
     public void initiateRefund(RefundRequest refundRequest) {
+        if (!userClient.authenticateUser(refundRequest.userId(), "accountType", "CUSTOMER")) {
+            throw new RuntimeException("User not authenticated");
+        }
         Refund refund = new Refund();
         refund.setRefundId(UUID.randomUUID().toString());
         refund.setPaymentId(refundRequest.paymentId());
@@ -35,7 +40,10 @@ public class RefundService {
         return refundRepository.findByOrderIdAndProductId(orderId, productId);
     }
 
-    public void processRefund(String refundId) {
+    public void processRefund(String refundId, String merchantId) {
+        if (!userClient.authenticateUser(merchantId, "accountType", "MERCHANT")) {
+            throw new RuntimeException("User not authenticated");
+        }
         Refund refund = refundRepository.findByRefundId(refundId);
         if (refund == null) {
             throw new RuntimeException("Refund not found");
