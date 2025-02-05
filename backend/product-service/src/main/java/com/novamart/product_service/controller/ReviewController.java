@@ -18,8 +18,9 @@ public class ReviewController {
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addReview(@RequestBody ReviewRequest reviewRequest) {
+    public String addReview(@RequestBody ReviewRequest reviewRequest) {
         reviewService.addReview(reviewRequest);
+        return "Review added successfully";
     }
 
     @GetMapping
@@ -46,14 +47,15 @@ public class ReviewController {
 
     @DeleteMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteReview(@RequestParam String reviewId) {
+    public String deleteReview(@RequestParam String reviewId) {
         reviewService.deleteReview(reviewId);
+        return "Review deleted successfully";
     }
 
     @DeleteMapping("/delete-all")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteAllReviews() {
-        reviewService.deleteAllReviews();
+    public String deleteAllReviews(@RequestParam String userId) {
+        reviewService.deleteAllReviews(userId);
         return "All reviews deleted";
     }
 }

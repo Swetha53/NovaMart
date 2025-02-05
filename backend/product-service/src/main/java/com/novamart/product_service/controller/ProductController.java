@@ -1,6 +1,7 @@
 package com.novamart.product_service.controller;
 
 import com.novamart.product_service.dto.ProductRequest;
+import com.novamart.product_service.dto.ProductResponse;
 import com.novamart.product_service.model.Product;
 import com.novamart.product_service.service.ProductService;
 import lombok.AllArgsConstructor;
@@ -23,24 +24,24 @@ public class ProductController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Product> getAllProducts() {
+    public List<ProductResponse> getAllProducts() {
         return productService.getAllProducts();
     }
 
     @GetMapping("/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public Product getProduct(@RequestParam String productId) {
+    public ProductResponse getProduct(@RequestParam String productId) {
         return productService.getProduct(productId);
     }
 
     @GetMapping("/{merchantId}")
     @ResponseStatus(HttpStatus.OK)
-    public Product getMerchantProducts(@RequestParam String merchantId) {
+    public List<ProductResponse> getMerchantProducts(@RequestParam String merchantId) {
         return productService.getMerchantProducts(merchantId);
     }
 
     @DeleteMapping("/clear")
-    public void clearAllProducts() {
-        productService.clearAllProducts();
+    public void clearAllProducts(@RequestParam String userId) {
+        productService.clearAllProducts(userId);
     }
 }

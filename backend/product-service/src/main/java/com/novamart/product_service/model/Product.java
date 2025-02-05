@@ -25,7 +25,6 @@ public class Product {
     private BigDecimal price;
     private String currencyCode;
     private List<String> categories;
-    private List<Reviews> reviews;
     private long createdAt;
     private long updatedAt;
     private String status;
