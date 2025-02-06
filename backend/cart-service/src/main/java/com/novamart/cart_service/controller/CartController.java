@@ -43,8 +43,8 @@ public class CartController {
 
     @DeleteMapping("/delete-all")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteAllCarts() {
-        cartService.deleteAllCarts();
+    public String deleteAllCarts(@RequestParam String userId) {
+        cartService.deleteAllCarts(userId);
         return "All Carts Deleted Successfully";
     }
 }

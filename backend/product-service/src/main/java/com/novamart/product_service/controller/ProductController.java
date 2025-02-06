@@ -22,26 +22,28 @@ public class ProductController {
         productService.createProduct(productRequest);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> getAllProducts() {
         return productService.getAllProducts();
     }
 
-    @GetMapping("/{productId}")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ProductResponse getProduct(@RequestParam String productId) {
-        return productService.getProduct(productId);
-    }
-
-    @GetMapping("/{merchantId}")
-    @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponse> getMerchantProducts(@RequestParam String merchantId) {
-        return productService.getMerchantProducts(merchantId);
+    public List<ProductResponse> getProducts(@RequestParam(required = false) String productId,
+                                      @RequestParam(required = false) String merchantId) {
+        if (productId == null) {
+            return productService.getMerchantProducts(merchantId);
+        } else if (merchantId == null) {
+            return productService.getProduct(productId);
+        } else {
+            throw new RuntimeException("Invalid request");
+        }
     }
 
     @DeleteMapping("/clear")
-    public void clearAllProducts(@RequestParam String userId) {
+    public String clearAllProducts(@RequestParam String userId) {
         productService.clearAllProducts(userId);
+        return "All products deleted successfully";
     }
 }

@@ -24,5 +24,6 @@ public class CartItem {
     private Integer quantity;
     private BigDecimal unitPrice;
     private BigDecimal totalPrice;
+    private String status;
     private long addedAt;
 }

@@ -14,7 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -29,8 +31,8 @@ public class ProductService {
         if (!userClient.authenticateUser(productRequest.merchantId(), "accountType", "MERCHANT")) {
             throw new RuntimeException("User not authenticated");
         }
-        List<Reviews> reviews = new ArrayList<>();
         Product product = Product.builder()
+                .productId(UUID.randomUUID().toString())
                 .merchantId(productRequest.merchantId())
                 .name(productRequest.name())
                 .description(productRequest.description())
@@ -44,19 +46,19 @@ public class ProductService {
                 .attributes(productRequest.attributes())
                 .build();
         InventoryRequest inventoryRequest = new InventoryRequest(
-                productRequest.productId(),
+                product.getProductId(),
                 productRequest.name(),
                 productRequest.quantity()
         );
 
         log.info(inventoryClient.createProductInventory(inventoryRequest));
         productRepository.save(product);
-        log.info("Product created successfully");
     }
 
     public List<ProductResponse> getAllProducts() {
         List<ProductResponse> productResponseList = new ArrayList<>();
         for (Product product : productRepository.findAll()) {
+            log.info(product.toString());
             InventoryResponse inventoryResponse = inventoryClient.getInventoryByProductId(product.getProductId());
             List<Reviews> reviews = reviewService.getReviewByProductId(product.getProductId());
             ProductResponse productResponse = new ProductResponse(
@@ -82,11 +84,11 @@ public class ProductService {
         return productResponseList;
     }
 
-    public ProductResponse getProduct(String productId) {
+    public List<ProductResponse> getProduct(String productId) {
         Product product = productRepository.findByProductId(productId);
         InventoryResponse inventoryResponse = inventoryClient.getInventoryByProductId(productId);
         List<Reviews> reviews = reviewService.getReviewByProductId(productId);
-        return new ProductResponse(
+        ProductResponse productResponse = new ProductResponse(
                 product.getProductId(),
                 product.getMerchantId(),
                 product.getName(),
@@ -104,6 +106,7 @@ public class ProductService {
                 inventoryResponse.quantitySold(),
                 inventoryResponse.quantityReserved()
         );
+        return Collections.singletonList(productResponse);
     }
 
     public List<ProductResponse> getMerchantProducts(String merchantId) {
