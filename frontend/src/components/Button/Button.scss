@@ -1,0 +1,9 @@
+@use "./../../style/colors" as c;
+
+.button {
+  background-color: c.$secondary;
+  border-radius: 8px;
+  height: 2rem;
+  width: var(--width, 80%);
+  margin: var(--margin, 2rem);
+}

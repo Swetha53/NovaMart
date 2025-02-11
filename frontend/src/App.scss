@@ -1,11 +1,39 @@
+@use "./style/colors" as c;
+
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
+  /* max-width: 1280px; */
+  /* margin: 0 auto;
   padding: 2rem;
-  text-align: center;
+  text-align: center; */
+  --rem: 14px;
+  font-size: 14px !important;
+}
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: unset;
+  background-color: c.$primary;
+  font-size: 14px !important;
+}
+input,
+select,
+button {
+  font-size: inherit;
+  font-family: inherit;
+}
+button {
+  outline: none;
+  border: none;
+  padding: unset;
+  cursor: pointer;
 }
 
-.logo {
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
@@ -39,4 +67,4 @@
 
 .read-the-docs {
   color: #888;
-}
+} */

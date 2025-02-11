@@ -1,0 +1,26 @@
+@use "./../../style/colors" as c;
+
+.header {
+  width: calc(100% - 0.4rem);
+  padding: 0.2rem;
+  background-color: c.$secondary;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  &__logo {
+    height: 50px;
+  }
+  &__search {
+    width: 80%;
+  }
+  &__profile {
+    a {
+      padding-left: 0.2rem;
+      text-decoration: none;
+      color: black;
+    }
+  }
+  &__img {
+    height: 40px;
+  }
+}
