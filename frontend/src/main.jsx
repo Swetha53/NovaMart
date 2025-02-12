@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard/Dashboard.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Cart from "./pages/Cart/Cart.jsx";
 import Product from "./pages/Product/Product.jsx";
+import Profile from "./pages/Profile/Profile.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,6 +22,7 @@ const router = createBrowserRouter(
       <Route path="product" element={<Product />}>
         <Route path=":productId" element={<Product />} />
       </Route>
+      <Route path="profile" element={<Profile />} />
     </Route>
   )
 );
