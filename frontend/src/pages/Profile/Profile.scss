@@ -12,19 +12,19 @@
       margin: 1rem;
     }
     div {
-        background-color: c.$secondary;
+      background-color: c.$secondary;
+      border-radius: 50%;
+      width: 12vw;
+      aspect-ratio: 1/1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+        width: 10vw;
         border-radius: 50%;
-        width: 12vw;
         aspect-ratio: 1/1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        img {
-            width: 10vw;
-            border-radius: 50%;
-            aspect-ratio: 1/1;
-            margin: unset;
-        }
+        margin: unset;
+      }
     }
   }
   &__tabs {
@@ -42,6 +42,10 @@
       &-active {
         background-color: c.$secondary;
         color: c.$primary;
+      }
+      &-disabled {
+        pointer-events: none;
+        opacity: 0.4;
       }
     }
     &__profile {
@@ -63,11 +67,20 @@
         grid-template-areas:
           "firstname lastname"
           "age gender"
+          "email email"
           "address address"
           "reviews reviews";
-        .firstname, .lastname, .age, .gender, .address {
-            padding: 0.5rem 0rem;
-            font-size: 1rem;
+        .firstname,
+        .lastname,
+        .age,
+        .gender,
+        .email,
+        .address {
+          padding: 0.5rem 0rem;
+          font-size: 1rem;
+        }
+        .email {
+          grid-area: email;
         }
       }
       &__reviews {
@@ -76,35 +89,35 @@
         padding: 0.5rem;
         border-radius: 8px;
         &__container {
-            background-color: c.$primary;
-            padding: 0.5rem;
-            border-radius: 8px;
-            width: 25%;
-            &__rating img {
-                height: 0.75rem;
-                padding-bottom: 0.5rem;
-                aspect-ratio: 1/1;
+          background-color: c.$primary;
+          padding: 0.5rem;
+          border-radius: 8px;
+          width: 25%;
+          &__rating img {
+            height: 0.75rem;
+            padding-bottom: 0.5rem;
+            aspect-ratio: 1/1;
+          }
+          &__title {
+            font-weight: 600;
+          }
+          &__footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            a {
+              color: c.$secondary;
+              font-weight: 600;
+              &:visited {
+                color: c.$secondary;
+              }
             }
-            &__title {
-                font-weight: 600;
-            }
-            &__footer {
-                display: flex;
-                justify-content: space-between;
-                align-items: baseline;
-                a {
-                    color: c.$secondary;
-                    font-weight: 600;
-                    &:visited {
-                        color: c.$secondary;
-                    }
-                }
-            }
-            &__image {
-                width: 1.5rem;
-                padding-top: 0.5rem;
-                aspect-ratio: 1/1;
-            }
+          }
+          &__image {
+            width: 1.5rem;
+            padding-top: 0.5rem;
+            aspect-ratio: 1/1;
+          }
         }
       }
     }

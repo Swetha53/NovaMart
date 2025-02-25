@@ -3,7 +3,11 @@
 .button {
   background-color: c.$secondary;
   border-radius: 8px;
-  height: 2rem;
+  height: var(--height, 2rem);
   width: var(--width, 80%);
   margin: var(--margin, 2rem);
+  &-reverse {
+    background-color: c.$primary;
+    color: c.$secondary;
+  }
 }

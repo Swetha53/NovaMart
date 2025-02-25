@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
-import { fetchUserDetails, fetchUserReviews } from "../../api";
+import { fetchUserDetails, fetchUserReviews, fetchUserOrders } from "../../api";
 import "./Profile.scss";
 import ProfileImage from "./../../assets/reverse_profile.svg";
 import FilledStar from "./../../assets/fill_star.png";
 import Star from "./../../assets/star.png";
 import Image from "./../../assets/image.png";
+import OrderTable from "../../components/OrderTable/OrderTable";
 
 function Profile() {
   const [userDetails, setUserDetails] = useState({});
   const [activeTab, setActiveTab] = useState(0);
   const [reviews, setReviews] = useState([]);
+  const [orders, setOrders] = useState([]);
+
   useEffect(() => {
     const loadUserDetails = async () => {
       try {
@@ -42,8 +45,25 @@ function Profile() {
     loadUserReviews();
   }, []);
 
+  const loadUserOrders = async () => {
+    try {
+      //   TODO find a way to store user id cookies or something else
+      const tempUserOrders = await fetchUserOrders(
+        "9633ec2b-7e0e-466e-866a-159afccf7542"
+      );
+      setOrders(tempUserOrders);
+    } catch (err) {
+      // setError(err.message);
+    } finally {
+      // setLoading(false);
+    }
+  };
+
   const tabChange = (value) => {
     setActiveTab(value);
+    if (value == 1) {
+      loadUserOrders();
+    }
   };
   return (
     <div className="profile">
@@ -88,10 +108,10 @@ function Profile() {
           className={
             activeTab == 2
               ? "profile__tabs__tab-active profile__tabs__tab profile__tabs__wishlist"
-              : "profile__tabs__tab profile__tabs__wishlist"
+              : "profile__tabs__tab-disabled profile__tabs__tab profile__tabs__wishlist"
           }
         >
-          Wishlist
+          Wishlist [Coming Soon!!]
         </div>
         <div className="profile__tabs__main">
           {activeTab == 0 && (
@@ -105,6 +125,7 @@ function Profile() {
                 </div>
                 <div className="age">Age: {userDetails.age}</div>
                 <div className="gender">Gender: {userDetails.gender}</div>
+                <div className="email">Email: {userDetails.email}</div>
                 <div className="address">Address: {userDetails.address}</div>
               </div>
               <div className="profile__tabs__main__reviews">
@@ -158,6 +179,17 @@ function Profile() {
                   </div>
                 ))}
               </div>
+            </>
+          )}
+          {activeTab == 1 && (
+            <>
+              {orders.map((order, index) => (
+                <OrderTable
+                  order={order}
+                  key={index}
+                  name={userDetails.firstName + " " + userDetails.lastName}
+                />
+              ))}
             </>
           )}
         </div>

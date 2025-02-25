@@ -3,6 +3,7 @@ import axios from "axios";
 const PRODUCT_URL = 'http://localhost:8080/api/products';
 const USER_URL = 'http://localhost:8085/api/users';
 const REVIEW_URL = 'http://localhost:8080/api/reviews';
+const ORDER_URL = 'http://localhost:8081/api/orders'
 
 const fetchProductDetails = async (productId) => {
     try {
@@ -34,4 +35,14 @@ const fetchUserReviews = async (userId) => {
   }
 };
 
-export {fetchProductDetails, fetchUserDetails, fetchUserReviews}
+const fetchUserOrders = async (userId) => {
+  try {
+    const response = await axios.get(`${ORDER_URL}?userId=${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching product details:', error);
+    throw error;
+  }
+};
+
+export {fetchProductDetails, fetchUserDetails, fetchUserReviews, fetchUserOrders}

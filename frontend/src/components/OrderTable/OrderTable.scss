@@ -1,0 +1,81 @@
+@use "./../../style/colors" as c;
+
+.order {
+  border: 1px solid c.$secondary;
+  border-radius: 8px;
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: c.$secondary;
+    padding: 0.5rem;
+    border-radius: 8px 8px 0px 0px;
+    div {
+      display: grid;
+      grid-gap: 0.5rem;
+    }
+    &__left {
+      grid-template-areas:
+        "header1 header2 header3"
+        "createdat totalamount address";
+      .header2 {
+        grid-area: header2;
+      }
+      .header3 {
+        grid-area: header3;
+      }
+      .createdat {
+        grid-area: createdat;
+      }
+      .totalamount {
+        grid-area: totalamount;
+      }
+      .address {
+        grid-area: address;
+      }
+    }
+    &__right {
+      grid-template-areas:
+        "orderid orderid"
+        "orderdetail print";
+      .orderid {
+        grid-area: orderid;
+      }
+      .orderdetail {
+        grid-area: orderdetail;
+      }
+      .print {
+        grid-area: print;
+      }
+    }
+  }
+  &__items {
+    &__item {
+      display: grid;
+      grid-template-columns: 2rem auto auto;
+      grid-template-areas:
+        "image name review"
+        "image amount review";
+      padding: 1rem;
+      align-items: center;
+      align-content: center;
+      .image {
+        grid-area: image;
+        img {
+          height: 1.5rem;
+          aspect-ratio: 1/1;
+        }
+      }
+      .name {
+        grid-area: name;
+      }
+      .button {
+        grid-area: review;
+        justify-self: right;
+      }
+      .amount {
+        grid-area: amount;
+      }
+    }
+  }
+}
