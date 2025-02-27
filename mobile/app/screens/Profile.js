@@ -7,159 +7,77 @@ import {
   Pressable,
   ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import colors from "../config/colors";
 import star from "../assets/star.png";
 import filledStar from "../assets/fill_star.png";
 import imagePlaceholder from "../assets/image.png";
 import OrderTable from "../components/OrderTable";
+import {
+  fetchUserDetails,
+  fetchUserReviews,
+  fetchUserOrders,
+} from "../config/api";
 
 const dimensions = Dimensions.get("screen");
 
 const Profile = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState(0);
-  const userData = {
-    userId: "9633ec2b-7e0e-466e-866a-159afccf7542",
-    email: "remusjohnlupin@hotmail.com",
-    password: "moony_0",
-    firstName: "Remus",
-    lastName: "Lupin",
-    age: 40,
-    gender: "M",
-    phone: "5432109876",
-    address: "2nd floor, Gryffindor Common Room, Hogwarts, Scotland",
-    avatar:
-      "https://cinema-quotes.com/wp-content/uploads/2024/05/Professor-Lupin.jpg",
-    roles: ["VIEW"],
-    accountType: "CUSTOMER",
-    preferences: ["classic"],
-    createdAt: 1738705478645,
-    updatedAt: 1739326271052,
+  const [userData, setUserData] = useState({});
+  const [userReviews, setUserReviews] = useState([]);
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        const tempUserDetails = await fetchUserDetails(
+          "9633ec2b-7e0e-466e-866a-159afccf7542"
+        );
+        setUserData(tempUserDetails);
+      } catch (err) {
+        // setError(err.message);
+      } finally {
+        // setLoading(false);
+      }
+    };
+
+    const loadUserReviews = async () => {
+      try {
+        const tempUserReviews = await fetchUserReviews(
+          "9633ec2b-7e0e-466e-866a-159afccf7542"
+        );
+        setUserReviews(tempUserReviews);
+      } catch (err) {
+        // setError(err.message);
+      } finally {
+        // setLoading(false);
+      }
+    };
+
+    loadUserData();
+    loadUserReviews();
+  }, []);
+
+  const loadUserOrders = async () => {
+    try {
+      //   TODO find a way to store user id cookies or something else
+      const tempUserOrders = await fetchUserOrders(
+        "9633ec2b-7e0e-466e-866a-159afccf7542"
+      );
+      setOrders(tempUserOrders);
+    } catch (err) {
+      // setError(err.message);
+    } finally {
+      // setLoading(false);
+    }
   };
-  const userReviews = [
-    {
-      reviewId: "b221c2b2-0d3d-4895-a1c6-c9918da3d83f",
-      userId: "9633ec2b-7e0e-466e-866a-159afccf7542",
-      merchantId: "7f6852dc-ee5d-4ad4-8a26-7ed381cfdd63",
-      productId: "eb7ab6de-aafd-4023-90b9-3106dddeadc8",
-      title: "Useless Product",
-      comment:
-        "Broke after using for a few times. Not worth the money and wait.",
-      imageUrl: [],
-      rating: 1,
-    },
-    {
-      reviewId: "b221c2b2-0d3d-4895-a1c6-c9918da3d83f",
-      userId: "9633ec2b-7e0e-466e-866a-159afccf7542",
-      merchantId: "7f6852dc-ee5d-4ad4-8a26-7ed381cfdd63",
-      productId: "eb7ab6de-aafd-4023-90b9-3106dddeadc8",
-      title: "Useless Product",
-      comment:
-        "Broke after using for a few times. Not worth the money and wait.",
-      imageUrl: [],
-      rating: 1,
-    },
-    {
-      reviewId: "b221c2b2-0d3d-4895-a1c6-c9918da3d83f",
-      userId: "9633ec2b-7e0e-466e-866a-159afccf7542",
-      merchantId: "7f6852dc-ee5d-4ad4-8a26-7ed381cfdd63",
-      productId: "eb7ab6de-aafd-4023-90b9-3106dddeadc8",
-      title: "Useless Product",
-      comment:
-        "Broke after using for a few times. Not worth the money and wait.",
-      imageUrl: [],
-      rating: 1,
-    },
-  ];
-  const orders = [
-    {
-      orderId: "cb55c108-af1a-4a13-9169-15226cfd7253",
-      userId: "9633ec2b-7e0e-466e-866a-159afccf7542",
-      orderStatus: "DELIVERED",
-      totalAmount: 230.0,
-      currencyCode: "CAD",
-      createdAt: 1738788348035,
-      orderItemList: [
-        {
-          orderItemId: "757eecad-0e5d-4f71-8e85-e8c52f4350c6",
-          orderId: "cb55c108-af1a-4a13-9169-15226cfd7253",
-          productId: "eb7ab6de-aafd-4023-90b9-3106dddeadc8",
-          merchantId: "7f6852dc-ee5d-4ad4-8a26-7ed381cfdd63",
-          quantity: 2,
-          unitPrice: 50.0,
-          totalPrice: 100.0,
-          createdAt: 1738788348036,
-        },
-        {
-          orderItemId: "757eecad-0e5d-4f71-8e85-e8c52f4350c6",
-          orderId: "cb55c108-af1a-4a13-9169-15226cfd7253",
-          productId: "eb7ab6de-aafd-4023-90b9-3106dddeadc8",
-          merchantId: "7f6852dc-ee5d-4ad4-8a26-7ed381cfdd63",
-          quantity: 2,
-          unitPrice: 50.0,
-          totalPrice: 100.0,
-          createdAt: 1738788348036,
-        },
-        {
-          orderItemId: "757eecad-0e5d-4f71-8e85-e8c52f4350c6",
-          orderId: "cb55c108-af1a-4a13-9169-15226cfd7253",
-          productId: "eb7ab6de-aafd-4023-90b9-3106dddeadc8",
-          merchantId: "7f6852dc-ee5d-4ad4-8a26-7ed381cfdd63",
-          quantity: 2,
-          unitPrice: 50.0,
-          totalPrice: 100.0,
-          createdAt: 1738788348036,
-        },
-      ],
-      },
-      {
-        orderId: "cb55c108-af1a-4a13-9169-15226cfd7253",
-        userId: "9633ec2b-7e0e-466e-866a-159afccf7542",
-        orderStatus: "DELIVERED",
-        totalAmount: 230.0,
-        currencyCode: "CAD",
-        createdAt: 1738788348035,
-        orderItemList: [
-          {
-            orderItemId: "757eecad-0e5d-4f71-8e85-e8c52f4350c6",
-            orderId: "cb55c108-af1a-4a13-9169-15226cfd7253",
-            productId: "eb7ab6de-aafd-4023-90b9-3106dddeadc8",
-            merchantId: "7f6852dc-ee5d-4ad4-8a26-7ed381cfdd63",
-            quantity: 2,
-            unitPrice: 50.0,
-            totalPrice: 100.0,
-            createdAt: 1738788348036,
-          },
-          {
-            orderItemId: "757eecad-0e5d-4f71-8e85-e8c52f4350c6",
-            orderId: "cb55c108-af1a-4a13-9169-15226cfd7253",
-            productId: "eb7ab6de-aafd-4023-90b9-3106dddeadc8",
-            merchantId: "7f6852dc-ee5d-4ad4-8a26-7ed381cfdd63",
-            quantity: 2,
-            unitPrice: 50.0,
-            totalPrice: 100.0,
-            createdAt: 1738788348036,
-          },
-          {
-            orderItemId: "757eecad-0e5d-4f71-8e85-e8c52f4350c6",
-            orderId: "cb55c108-af1a-4a13-9169-15226cfd7253",
-            productId: "eb7ab6de-aafd-4023-90b9-3106dddeadc8",
-            merchantId: "7f6852dc-ee5d-4ad4-8a26-7ed381cfdd63",
-            quantity: 2,
-            unitPrice: 50.0,
-            totalPrice: 100.0,
-            createdAt: 1738788348036,
-          },
-        ],
-      },
-  ];
 
   const tabChange = (value) => {
     setActiveTab(value);
-    // if (value == 1) {
-    //   loadUserOrders();
-    // }
+    if (value == 1) {
+      loadUserOrders();
+    }
   };
   return (
     <SafeAreaView>
@@ -267,7 +185,7 @@ const Profile = ({ navigation }) => {
                       )}
                       <Pressable
                         onPress={() => {
-                          navigation.navigate("Product");
+                          navigation.navigate("Product", { productId: userReview.productId });
                         }}
                       >
                         <Text style={styles.reviewlink}>See Product</Text>

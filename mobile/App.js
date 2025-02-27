@@ -13,7 +13,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Profile">
-        <Stack.Screen name="Product" component={Product} />
+        <Stack.Screen name="Product" component={Product} initialParams={{ productId: null }} />
         <Stack.Screen name="Profile" component={Profile} />
       </Stack.Navigator>
     </NavigationContainer>
