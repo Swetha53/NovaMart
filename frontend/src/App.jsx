@@ -1,18 +1,14 @@
 // import { useState } from 'react'
 import "./App.scss";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Header from "./components/Header/Header";
 
 function App() {
-  // const [count, setCount] = useState(0)
-  const user = {
-    imageUrl: null,
-    firstName: null,
-  };
+  const path = useLocation().pathname;
 
   return (
     <>
-      <Header user={user} />
+      {path !== "/login" && <Header />}
       <Outlet />
     </>
   );

@@ -1,13 +1,14 @@
 import "./Button.scss";
 
 function Button(props) {
+  const { reverse, width, margin, height, onClickHandler, text } = props;
   return (
     <button
-      className={props.reverse ? "button button-reverse" : "button"}
-      style={{ "--width": props.width, "--margin": props.margin, "--height": props.height }}
-      onClick={props.onClickHandler}
+      className={reverse ? "button button-reverse" : "button"}
+      style={{ "--width": width, "--margin": margin, "--height": height }}
+      onClick={onClickHandler}
     >
-      {props.text}
+      {text}
     </button>
   );
 }

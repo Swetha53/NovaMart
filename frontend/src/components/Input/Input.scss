@@ -1,0 +1,16 @@
+@use "./../../config/colors" as c;
+
+input.input {
+  background-color: c.$primary;
+  outline: none;
+  border: 1px solid c.$secondary;
+  width: calc(100% - 1rem);
+  margin: .25rem 0rem;
+  padding: .25rem;
+  color: c.$tertiary;
+  border-radius: 4px;
+  &-reverse {
+    background-color: c.$secondary;
+    border: 1px solid c.$primary;
+  }
+}

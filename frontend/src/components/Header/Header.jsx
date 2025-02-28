@@ -5,7 +5,10 @@ import cart from "./../../assets/cart.svg";
 import profile from "./../../assets/profile.svg";
 import Search from "./../Search/Search";
 
-function Header(props) {
+function Header() {
+  const userName = sessionStorage.getItem("userName")
+  const avatar = sessionStorage.getItem("avatar")
+
   return (
     <div className="header">
       <NavLink to="">
@@ -14,18 +17,18 @@ function Header(props) {
       <div className="header__search">
         <Search />
       </div>
-      <div className="header__profile flex">
-        {props.user.imageUrl ? (
+      <div className="header__profile">
+        {avatar ? (
           <img
-            src={props.user.imageUrl}
+            src={avatar}
             alt="Profile Image"
-            className="header__img"
+            className="header__profile__image"
           />
         ) : (
-          <img src={profile} alt="Profile Image" className="header__img" />
+          <img src={profile} alt="Profile Image" className="header__profile__image" />
         )}
-        {props.user.firstName ? (
-          <p>Hi, {props.user.firstName}</p>
+        {userName ? (
+          <p>Hi, {userName}</p>
         ) : (
           <NavLink to="login">Log In</NavLink>
         )}

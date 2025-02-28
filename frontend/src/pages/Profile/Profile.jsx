@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
-import { fetchUserDetails, fetchUserReviews, fetchUserOrders } from "../../api";
+import {
+  fetchUserDetails,
+  fetchUserReviews,
+  fetchUserOrders,
+} from "../../config/api";
 import "./Profile.scss";
 import ProfileImage from "./../../assets/reverse_profile.svg";
 import FilledStar from "./../../assets/fill_star.png";
@@ -8,6 +12,7 @@ import Image from "./../../assets/image.png";
 import OrderTable from "../../components/OrderTable/OrderTable";
 
 function Profile() {
+  const userId = sessionStorage.getItem("userId");
   const [userDetails, setUserDetails] = useState({});
   const [activeTab, setActiveTab] = useState(0);
   const [reviews, setReviews] = useState([]);
@@ -16,10 +21,7 @@ function Profile() {
   useEffect(() => {
     const loadUserDetails = async () => {
       try {
-        //   TODO find a way to store user id cookies or something else
-        const tempUserDetails = await fetchUserDetails(
-          "9633ec2b-7e0e-466e-866a-159afccf7542"
-        );
+        const tempUserDetails = await fetchUserDetails(userId);
         setUserDetails(tempUserDetails);
       } catch (err) {
         // setError(err.message);
@@ -30,9 +32,7 @@ function Profile() {
 
     const loadUserReviews = async () => {
       try {
-        const tempUserReviews = await fetchUserReviews(
-          "9633ec2b-7e0e-466e-866a-159afccf7542"
-        );
+        const tempUserReviews = await fetchUserReviews(userId);
         setReviews(tempUserReviews);
       } catch (err) {
         // setError(err.message);
@@ -47,10 +47,7 @@ function Profile() {
 
   const loadUserOrders = async () => {
     try {
-      //   TODO find a way to store user id cookies or something else
-      const tempUserOrders = await fetchUserOrders(
-        "9633ec2b-7e0e-466e-866a-159afccf7542"
-      );
+      const tempUserOrders = await fetchUserOrders(userId);
       setOrders(tempUserOrders);
     } catch (err) {
       // setError(err.message);

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { fetchProductDetails } from "../../api";
+import { fetchProductDetails } from "../../config/api";
 import "./Product.scss";
 import ImageBlock from "../../components/ImageBlock/ImageBlock";
 import Button from "../../components/Button/Button";
@@ -16,19 +16,19 @@ function Product() {
     PlaceholderImage,
   ]);
   const [attributes, setAttributes] = useState({});
-  const [quantity, setQuanity] = useState(0)
+  const [quantity, setQuanity] = useState(0);
 
   const onClickHandler = () => {
     console.log("AR Implementation");
   };
 
   const onCounterChange = (value) => {
-    setQuanity(value)
+    setQuanity(value);
   };
 
   const addToCart = () => {
     console.log("Add to cart:" + quantity);
-  }
+  };
 
   useEffect(() => {
     const loadDetails = async () => {
@@ -82,7 +82,12 @@ function Product() {
             {productDetails.description}
           </div>
         </div>
-        <Button text="Add to Cart" onClickHandler={addToCart} width="50%" margin="0.5rem 0rem"/>
+        <Button
+          text="Add to Cart"
+          onClickHandler={addToCart}
+          width="50%"
+          margin="0.5rem 0rem"
+        />
       </div>
     </div>
   );

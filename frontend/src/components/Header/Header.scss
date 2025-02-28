@@ -1,4 +1,4 @@
-@use "./../../style/colors" as c;
+@use "./../../config/colors" as c;
 
 .header {
   width: calc(100% - 0.4rem);
@@ -14,10 +14,19 @@
     width: 80%;
   }
   &__profile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &__image {
+      height: 40px;
+      aspect-ratio: 1/1;
+      border-radius: 50%;
+      margin-right: 0.25rem;
+    }
     a {
       padding-left: 0.2rem;
       text-decoration: none;
-      color: black;
+      color: c.$tertiary;
     }
   }
   &__img {

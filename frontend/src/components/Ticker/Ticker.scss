@@ -1,0 +1,21 @@
+@use "./../../config/colors" as c;
+
+.ticker {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 2rem auto;
+  width: 40%;
+  padding: 0.5rem;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  &-error {
+    background-color: c.$error;
+    border: 1px solid c.$errorBorder;
+    color: c.$errorColor;
+  }
+  &__close {
+    cursor: pointer;
+  }
+}
