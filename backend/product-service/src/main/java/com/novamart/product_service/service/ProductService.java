@@ -1,5 +1,6 @@
 package com.novamart.product_service.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.novamart.product_service.client.InventoryClient;
 import com.novamart.product_service.client.UserClient;
 import com.novamart.product_service.dto.InventoryRequest;
@@ -11,6 +12,7 @@ import com.novamart.product_service.model.Reviews;
 import com.novamart.product_service.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +28,8 @@ public class ProductService {
     private final InventoryClient inventoryClient;
     private final UserClient userClient;
     private final ReviewService reviewService;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ObjectMapper objectMapper;
 
     public void createProduct(ProductRequest productRequest) {
         if (!userClient.authenticateUser(productRequest.merchantId(), "accountType", "MERCHANT")) {
@@ -53,6 +57,7 @@ public class ProductService {
 
         log.info(inventoryClient.createProductInventory(inventoryRequest));
         productRepository.save(product);
+        publishProductUpdate(product);
     }
 
     public List<ProductResponse> getAllProducts() {
@@ -144,5 +149,13 @@ public class ProductService {
         log.info(inventoryClient.deleteAllInventory());
         reviewService.deleteAllReviews(userId);
         productRepository.deleteAll();
+    }
+
+    public void publishProductUpdate(Product product) {
+        try {
+            kafkaTemplate.send("product", objectMapper.writeValueAsString(product));
+        } catch (Exception e) {
+            log.error("Error publishing product: {}", e.getMessage());
+        }
     }
 }

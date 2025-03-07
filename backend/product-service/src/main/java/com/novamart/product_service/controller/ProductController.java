@@ -2,7 +2,6 @@ package com.novamart.product_service.controller;
 
 import com.novamart.product_service.dto.ProductRequest;
 import com.novamart.product_service.dto.ProductResponse;
-import com.novamart.product_service.model.Product;
 import com.novamart.product_service.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/products")
 @AllArgsConstructor
