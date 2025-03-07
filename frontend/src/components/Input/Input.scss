@@ -1,16 +1,85 @@
 @use "./../../config/colors" as c;
 
-input.input {
-  background-color: c.$primary;
-  outline: none;
-  border: 1px solid c.$secondary;
-  width: calc(100% - 1rem);
-  margin: .25rem 0rem;
-  padding: .25rem;
-  color: c.$tertiary;
-  border-radius: 4px;
+.input {
+  width: var(--width, calc(100% - 1rem));
+  margin: var(--margin, 0.25rem 0rem);
+  position: relative;
+  input:not([type="radio"]) {
+    width: 100%;
+    background-color: c.$primary;
+    outline: none;
+    border: 1px solid c.$secondary;
+    padding: 0.25rem;
+    color: c.$tertiary;
+    border-radius: 4px;
+  }
   &-reverse {
-    background-color: c.$secondary;
-    border: 1px solid c.$primary;
+    input:not([type="radio"]) {
+      background-color: c.$secondary;
+      border: 1px solid c.$primary;
+    }
+  }
+  &-error {
+    input:not([type="radio"]) {
+      background-color: c.$error;
+      border: 1px solid c.$errorBorder;
+    }
+    &__label {
+      color: c.$errorColor;
+      font-weight: 600;
+      margin: 0.15rem 0;
+    }
+  }
+  &__radio {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &__container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      input[type="radio"] {
+        display: none;
+        & + label {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .symbol {
+            border: 1px solid c.$tertiary;
+            display: block;
+            background-color: c.$primary;
+            border-radius: 50%;
+            height: 0.5rem;
+            aspect-ratio: 1/1;
+            margin: 0 0.25rem;
+          }
+        }
+        &:checked + label {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .symbol {
+            border: 1px solid c.$secondary;
+            display: block;
+            background-color: c.$primary;
+            border-radius: 50%;
+            height: 0.5rem;
+            aspect-ratio: 1/1;
+            margin: 0 0.25rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            &::after {
+              content: "";
+              background-color: c.$secondary;
+              border-radius: 50%;
+              height: 0.4rem;
+              aspect-ratio: 1/1;
+              display: block;
+            }
+          }
+        }
+      }
+    }
   }
 }

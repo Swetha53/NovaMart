@@ -1,4 +1,35 @@
 @use "./../../config/colors" as c;
 
 .register {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  img {
+    height: 10vh;
+    aspect-ratio: 1/1;
+  }
+  &__container {
+    min-height: 75vh;
+    width: 40%;
+    border: 1px solid c.$tertiary;
+    border-radius: 8px;
+    padding: 1rem;
+    &__note {
+      padding-bottom: 1rem;
+    }
+    &__row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: calc(100% - 1rem);
+    }
+    &__footer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
 }

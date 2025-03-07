@@ -8,7 +8,7 @@ function App() {
 
   return (
     <>
-      {path !== "/login" && <Header />}
+      {!["/login", "/register"].includes(path) && <Header />}
       <Outlet />
     </>
   );

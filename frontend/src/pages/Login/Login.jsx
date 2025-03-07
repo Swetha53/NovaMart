@@ -55,7 +55,7 @@ const Login = () => {
           <div className="login__user__body__container">
             <div>Email ID</div>
             <Input
-              type="email"
+              inputType="email"
               placeholder="Enter your Email ID"
               onChangeHandler={(value) => {
                 setEmail(value);
@@ -63,7 +63,7 @@ const Login = () => {
             />
             <div>Password</div>
             <Input
-              type="password"
+              inputType="password"
               placeholder="Enter your Password"
               onChangeHandler={(value) => {
                 setPassword(value);
@@ -93,7 +93,7 @@ const Login = () => {
           <div>Email ID</div>
           <Input
             reverse={true}
-            type="email"
+            inputType="email"
             placeholder="Enter your Email ID"
             onChangeHandler={(value) => {
               setEmail(value);
@@ -102,7 +102,7 @@ const Login = () => {
           <div>Password</div>
           <Input
             reverse={true}
-            type="password"
+            inputType="password"
             placeholder="Enter your Password"
             onChangeHandler={(value) => {
               setPassword(value);

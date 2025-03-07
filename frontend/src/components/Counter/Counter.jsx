@@ -28,8 +28,8 @@ function Counter(props) {
           <img src={upArrow} alt="Increase" />
         </button>
         <button
-          className={value == 1 ? "counter__arrows-disabled" : ""}
-          disabled={value == 1}
+          className={value <= 1 ? "counter__arrows-disabled" : ""}
+          disabled={value <= 1}
           onClick={() => {
             onChangeEventHandler(-1);
           }}

@@ -10,6 +10,7 @@ import FilledStar from "./../../assets/fill_star.png";
 import Star from "./../../assets/star.png";
 import Image from "./../../assets/image.png";
 import OrderTable from "../../components/OrderTable/OrderTable";
+import Ticker from "../../components/Ticker/Ticker";
 
 function Profile() {
   const userId = sessionStorage.getItem("userId");
@@ -17,6 +18,13 @@ function Profile() {
   const [activeTab, setActiveTab] = useState(0);
   const [reviews, setReviews] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [showTicker, setShowTicker] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const toggleTicker = (value, message) => {
+    setShowTicker(value);
+    setErrorMessage(message);
+  };
 
   useEffect(() => {
     const loadUserDetails = async () => {
@@ -24,7 +32,7 @@ function Profile() {
         const tempUserDetails = await fetchUserDetails(userId);
         setUserDetails(tempUserDetails);
       } catch (err) {
-        // setError(err.message);
+        toggleTicker(true, err.message);
       } finally {
         // setLoading(false);
       }
@@ -35,7 +43,7 @@ function Profile() {
         const tempUserReviews = await fetchUserReviews(userId);
         setReviews(tempUserReviews);
       } catch (err) {
-        // setError(err.message);
+        toggleTicker(true, err.message);
       } finally {
         // setLoading(false);
       }
@@ -50,7 +58,7 @@ function Profile() {
       const tempUserOrders = await fetchUserOrders(userId);
       setOrders(tempUserOrders);
     } catch (err) {
-      // setError(err.message);
+      toggleTicker(true, err.message);
     } finally {
       // setLoading(false);
     }
@@ -64,6 +72,15 @@ function Profile() {
   };
   return (
     <div className="profile">
+      {showTicker && (
+        <Ticker
+          type="error"
+          message={errorMessage}
+          closeTickerHandler={() => {
+            toggleTicker(false, "");
+          }}
+        />
+      )}
       <div className="profile__image">
         {userDetails.avatar ? (
           <div>

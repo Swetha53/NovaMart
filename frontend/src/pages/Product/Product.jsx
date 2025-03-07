@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { fetchProductDetails } from "../../config/api";
+import { fetchProductDetails, updateCart } from "../../config/api";
 import "./Product.scss";
 import ImageBlock from "../../components/ImageBlock/ImageBlock";
 import Button from "../../components/Button/Button";
@@ -9,6 +9,7 @@ import PlaceholderImage from "./../../assets/placeholder.jpg";
 
 function Product() {
   const { productId } = useParams();
+  const userId = sessionStorage.getItem("userId");
   const [productDetails, setProductDetails] = useState([]);
   const [selectedImages, setSelectedImages] = useState([
     PlaceholderImage,
@@ -17,6 +18,13 @@ function Product() {
   ]);
   const [attributes, setAttributes] = useState({});
   const [quantity, setQuanity] = useState(0);
+  const [showTicker, setShowTicker] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const toggleTicker = (value, message) => {
+    setShowTicker(value);
+    setErrorMessage(message);
+  };
 
   const onClickHandler = () => {
     console.log("AR Implementation");
@@ -26,8 +34,22 @@ function Product() {
     setQuanity(value);
   };
 
-  const addToCart = () => {
-    console.log("Add to cart:" + quantity);
+  const addToCart = async () => {
+    const requestBody = {
+      userId: userId,
+      productId: productDetails.productId,
+      quantity: quantity,
+      unitPrice: productDetails.price,
+      currencyCode: productDetails.currencyCode,
+    };
+    try {
+      // TODO set cart quantity in session storage so that cart icon can display that
+      await updateCart(requestBody);
+    } catch (err) {
+      toggleTicker(true, err.message);
+    } finally {
+      // setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -41,7 +63,7 @@ function Product() {
         }
         setSelectedImages(tempProductDetails[0].images);
       } catch (err) {
-        // setError(err.message);
+        toggleTicker(true, err.message);
       } finally {
         // setLoading(false);
       }
@@ -52,6 +74,15 @@ function Product() {
 
   return (
     <div className="product">
+      {showTicker && (
+        <Ticker
+          type="error"
+          message={errorMessage}
+          closeTickerHandler={() => {
+            toggleTicker(false, "");
+          }}
+        />
+      )}
       <div className="product__images">
         <ImageBlock productImages={selectedImages} />
         <Button text="View in AR" onClickHandler={onClickHandler} />
