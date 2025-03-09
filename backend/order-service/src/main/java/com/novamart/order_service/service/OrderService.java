@@ -37,6 +37,7 @@ public class OrderService {
 
             order.setOrderId(UUID.randomUUID().toString());
             order.setUserId(orderRequest.userId());
+            order.setCustomerName(orderRequest.customerName());
             order.setStatus("CONFIRMED");
             order.setTotalAmount(orderRequest.totalAmount());
             order.setCurrencyCode(orderRequest.currencyCode());
@@ -93,8 +94,8 @@ public class OrderService {
         for (Order order : orders) {
             List<OrderItem> orderItems = orderItemRepository.findByOrderId(order.getOrderId());
             userOrderResponse.add(new UserOrderResponse(order.getOrderId(), order.getUserId(),
-                    order.getStatus(), order.getTotalAmount(), order.getCurrencyCode(), order.getCreatedAt(),
-                    orderItems));
+                    order.getStatus(), order.getCustomerName(), order.getTotalAmount(), order.getCurrencyCode(),
+                    order.getCreatedAt(), orderItems));
         }
 
         return userOrderResponse;

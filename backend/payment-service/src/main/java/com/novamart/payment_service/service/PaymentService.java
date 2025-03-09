@@ -44,7 +44,7 @@ public class PaymentService {
 
     @Transactional
     public void deleteAllPayments(String userId) {
-        if (!userClient.authenticateUser(userId, "role", "ADMIN")) {
+        if (!userClient.authenticateUser(userId, "accountType", "ADMIN")) {
             throw new RuntimeException("User not authenticated");
         }
         refundService.deleteAllRefunds();

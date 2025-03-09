@@ -8,9 +8,18 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
-      MONGO_INITDB_DATABASE: product-service
     volumes:
       - ./data:/data/db
+  mysql:
+    image: mysql:8.3.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./docker/mysql/inti.sql:/docker-entrypoint-initdb.d/init.sql
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper
@@ -45,22 +54,97 @@ services:
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
+  product:
+    build: './product-service'
+    container_name: product
+    ports:
+      - "8080:8090"
+    depends_on:
+      - kafka
+      - mongodb
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'kafka:29092'
+      SPRING_DATA_MONGODB_URI: 'mongodb://root:password@mongodb:27017/product-service?authSource=admin'
+  order:
+    build: './order-service'
+    container_name: order
+    ports:
+      - "8081:8091"
+    depends_on:
+      - kafka
+      - mysql
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'kafka:29092'
+      SPRING_DATASOURCE_URL: 'jdbc:mysql://mysql:3306/order_service'
+      SPRING_DATASOURCE_USERNAME: 'root'
+      SPRING_DATASOURCE_PASSWORD: 'mysql'
+  cart:
+    build: './cart-service'
+    container_name: cart
+    ports:
+      - "8082:8092"
+    depends_on:
+      - kafka
+      - mysql
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'kafka:29092'
+      SPRING_DATASOURCE_URL: 'jdbc:mysql://mysql:3306/cart_service'
+      SPRING_DATASOURCE_USERNAME: 'root'
+      SPRING_DATASOURCE_PASSWORD: 'mysql'
+  payment:
+    build: './payment-service'
+    container_name: payment
+    ports:
+      - "8083:8093"
+    depends_on:
+      - kafka
+      - mysql
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'kafka:29092'
+      SPRING_DATASOURCE_URL: 'jdbc:mysql://mysql:3306/payment_service'
+      SPRING_DATASOURCE_USERNAME: 'root'
+      SPRING_DATASOURCE_PASSWORD: 'mysql'
+  inventory:
+    build: './inventory-service'
+    container_name: inventory
+    ports:
+      - "8084:8094"
+    depends_on:
+      - kafka
+      - mysql
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'kafka:29092'
+      SPRING_DATASOURCE_URL: 'jdbc:mysql://mysql:3306/inventory_service'
+      SPRING_DATASOURCE_USERNAME: 'root'
+      SPRING_DATASOURCE_PASSWORD: 'mysql'
+  user:
+    build: './user-service'
+    container_name: user
+    ports:
+      - "8085:8095"
+    depends_on:
+      - kafka
+      - mongodb
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'kafka:29092'
+      SPRING_DATA_MONGODB_URI: 'mongodb://root:password@mongodb:27017/user-service?authSource=admin'
   search:
     build: './search-service'
     container_name: search
     ports:
-      - "8089:8090"
+      - "8086:8096"
     depends_on:
       - kafka
     environment:
       DEVTIRO_KAFKA_TOPIC: 'product'
       SPRING_KAFKA_BOOTSTRAP_SERVERS: 'kafka:29092'
-  product:
-    build: './product-service'
-    container_name: product
+  notification:
+    build: './notification-service'
+    container_name: notification
     ports:
-      - "8080:8088"
+      - "8087:8097"
     depends_on:
       - kafka
     environment:
+      DEVTIRO_KAFKA_TOPICS: 'order-placed, order-delivered, order-cancelled, payment-completed, refund-initiated, refund-completed, review-added, profile-completed, profile-updated'
       SPRING_KAFKA_BOOTSTRAP_SERVERS: 'kafka:29092'

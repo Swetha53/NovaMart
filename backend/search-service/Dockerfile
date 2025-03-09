@@ -12,7 +12,7 @@ ENV SPRING_DATA_ELASTICSEARCH_CLUSTER_NODES=elasticsearch:9200
 ENV SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
 
 # Expose the port that the application will run on
-EXPOSE 8089
+EXPOSE 8086
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "search-service-0.0.1-SNAPSHOT.jar"]

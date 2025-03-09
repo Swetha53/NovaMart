@@ -21,6 +21,7 @@ public class Order {
     private String status;
     private BigDecimal totalAmount;
     private String currencyCode;
+    private String customerName;
     private long createdAt;
     private long updatedAt;
 }
