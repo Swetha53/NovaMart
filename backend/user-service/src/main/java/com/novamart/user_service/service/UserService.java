@@ -1,5 +1,6 @@
 package com.novamart.user_service.service;
 
+import com.novamart.user_service.dto.ApiResponse;
 import com.novamart.user_service.dto.LoginRequest;
 import com.novamart.user_service.dto.PasswordResetRequest;
 import com.novamart.user_service.dto.UserRequest;
@@ -7,6 +8,7 @@ import com.novamart.user_service.model.User;
 import com.novamart.user_service.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -16,12 +18,14 @@ import java.util.*;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public void registerUser(UserRequest userRequest) {
+    public ApiResponse registerUser(UserRequest userRequest) {
         Map<String, List<String>> roles = new HashMap<>();
 
         roles.put("MERCHANT", Arrays.asList("CREATE", "UPDATE", "VIEW"));
         roles.put("CUSTOMER", Collections.singletonList("VIEW"));
+        roles.put("ADMIN", Collections.singletonList("VIEW"));
         User user = User.builder()
                 .userId(UUID.randomUUID().toString())
                 .email(userRequest.email())
@@ -40,32 +44,35 @@ public class UserService {
                 .updatedAt(System.currentTimeMillis())
                 .build();
         userRepository.save(user);
-        log.info("User registered successfully");
+
+        publishKafkaEvent(userRequest.email(), "profile-completed");
+        return new ApiResponse(200, "User registered successfully", null);
     }
 
-    public User loginUser(LoginRequest loginRequest) {
+    public ApiResponse loginUser(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(loginRequest.email());
         if (user == null) {
-            throw new RuntimeException("User not found");
+            return new ApiResponse(404, "User not found", null);
         }
         if (!user.getPassword().equals(loginRequest.password())) {
-            throw new RuntimeException("Invalid password");
+            return new ApiResponse(401, "Invalid password", null);
         }
-        log.info("User logged in successfully");
-        return user;
+        List<User> users = Collections.singletonList(user);
+        return new ApiResponse(200, "User logged in successfully", users);
     }
 //    logout
-    public User getUser(String userId) {
-        return userRepository.findByUserId(userId);
+    public ApiResponse getUser(String userId) {
+        List<User> users = Collections.singletonList(userRepository.findByUserId(userId));
+        return new ApiResponse(200, "User details fetched successfully", users);
     }
 
-    public User updateUser(UserRequest userRequest) {
+    public ApiResponse updateUser(UserRequest userRequest) {
         User user = userRepository.findByEmail(userRequest.email());
         if (user == null) {
-            throw new RuntimeException("User not found");
+            return new ApiResponse(404, "User not found", null);
         }
         if (!user.getPassword().equals(userRequest.password()) || !user.getEmail().equals(userRequest.email())) {
-            throw new RuntimeException("Invalid password");
+            return new ApiResponse(401, "Invalid credentials", null);
         }
         user.setFirstName(userRequest.firstName());
         user.setLastName(userRequest.lastName());
@@ -77,52 +84,73 @@ public class UserService {
         user.setPreferences(userRequest.preferences());
         user.setUpdatedAt(System.currentTimeMillis());
         userRepository.save(user);
-        log.info("User details updated successfully");
-        return user;
+        List<User> users = Collections.singletonList(user);
+
+        publishKafkaEvent(userRequest.email(), "profile-updated");
+        return new ApiResponse(200, "User updated successfully", users);
     }
 
-    public void resetPassword(PasswordResetRequest passwordResetRequest) {
+    public ApiResponse resetPassword(PasswordResetRequest passwordResetRequest) {
         User user = userRepository.findByEmail(passwordResetRequest.email());
         if (user == null) {
-            throw new RuntimeException("User not found");
+            return new ApiResponse(404, "User not found", null);
         }
         if (!user.getPassword().equals(passwordResetRequest.token())) {
-            throw new RuntimeException("Invalid token");
+            return new ApiResponse(401, "Invalid token", null);
         }
         user.setPassword(passwordResetRequest.password());
         user.setUpdatedAt(System.currentTimeMillis());
         userRepository.save(user);
-        log.info("Password updated successfully");
+
+        return new ApiResponse(200, "Password reset successfully", null);
     }
 
-    public void deleteUser(String userId) {
+    public ApiResponse deleteUser(String userId) {
         User user = userRepository.findByUserId(userId);
         if (user == null) {
-            throw new RuntimeException("User not found");
+            return new ApiResponse(404, "User not found", null);
         }
+
+        publishKafkaEvent(user.getEmail(), "profile-deleted");
         userRepository.delete(user);
-        log.info("User deleted successfully");
+        return new ApiResponse(200, "User deleted successfully", null);
     }
 
-    public boolean authenticateUser(String userId, String checkField, String value) {
+    public ApiResponse authenticateUser(String userId, String checkField, String value) {
         User user = userRepository.findByUserId(userId);
         if (user == null) {
-            throw new RuntimeException("User not found");
+            return new ApiResponse(404, "User not found", null);
         }
+        boolean isValidUser;
         if (checkField.equals("role")) {
-            return user.getRoles().contains(value);
+            isValidUser = user.getRoles().contains(value);
         } else if (checkField.equals("accountType")) {
-            return user.getAccountType().equals(value);
+            isValidUser = user.getAccountType().equals(value);
         } else {
-            throw new RuntimeException("Invalid checkField");
+            return new ApiResponse(400, "Invalid check field", null);
+        }
+
+        if (!isValidUser) {
+            return new ApiResponse(401, "User not authorized", null);
+        } else {
+            return new ApiResponse(200, "User authorized", null);
         }
     }
 
-    public void deleteAllUsers() {
+    public ApiResponse deleteAllUsers() {
         userRepository.deleteAll();
+        return new ApiResponse(200, "All users deleted successfully", null);
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public ApiResponse getAllUsers() {
+        return new ApiResponse(200, "All users fetched successfully", userRepository.findAll());
+    }
+
+    public void publishKafkaEvent(String userEmail, String topic) {
+        try {
+            kafkaTemplate.send(topic, userEmail);
+        } catch (Exception e) {
+            log.error("Error publishing order placed: {}", e.getMessage());
+        }
     }
 }

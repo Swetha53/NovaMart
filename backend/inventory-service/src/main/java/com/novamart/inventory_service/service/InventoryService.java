@@ -1,5 +1,6 @@
 package com.novamart.inventory_service.service;
 
+import com.novamart.inventory_service.dto.ApiResponse;
 import com.novamart.inventory_service.dto.InventoryRequest;
 import com.novamart.inventory_service.dto.ReservationRequest;
 import com.novamart.inventory_service.dto.ReserveInventoryRequest;
@@ -8,9 +9,10 @@ import com.novamart.inventory_service.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
-// TODO connect with reservation
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +20,7 @@ public class InventoryService {
     private final InventoryRepository inventoryRepository;
     private final ReservationService reservationService;
 
-    public void createProductInventory(InventoryRequest inventoryRequest) {
+    public ApiResponse createProductInventory(InventoryRequest inventoryRequest) {
         Inventory inventory = new Inventory();
         inventory.setInventoryId(UUID.randomUUID().toString());
         inventory.setProductId(inventoryRequest.productId());
@@ -29,20 +31,24 @@ public class InventoryService {
         inventory.setLastUpdated(System.currentTimeMillis());
 
         inventoryRepository.save(inventory);
+        return new ApiResponse(200, "Product " + inventoryRequest.productId() + " Created Successfully", null);
     }
 
-    public void restockInventory(String productId, long quantity) {
+    public ApiResponse restockInventory(String productId, long quantity) {
         Inventory inventory = inventoryRepository.findByProductId(productId);
         inventory.setQuantityAvailable(inventory.getQuantityAvailable() + quantity);
         inventory.setLastUpdated(System.currentTimeMillis());
         inventoryRepository.save(inventory);
+
+        return new ApiResponse(200, "Product " + productId + " Restocked Successfully", null);
     }
 
-    public Inventory getInventoryByProductId(String productId) {
-        return inventoryRepository.findByProductId(productId);
+    public ApiResponse getInventoryByProductId(String productId) {
+        List<Inventory> inventoryList = Collections.singletonList(inventoryRepository.findByProductId(productId));
+        return new ApiResponse(200, "Product " + productId + " Retrieved Successfully", inventoryList);
     }
 
-    public void reserveInventory(ReserveInventoryRequest reserveInventoryRequest) {
+    public ApiResponse reserveInventory(ReserveInventoryRequest reserveInventoryRequest) {
         Inventory inventory = inventoryRepository.findByProductId(reserveInventoryRequest.productId());
         inventory.setQuantityAvailable(inventory.getQuantityAvailable() - reserveInventoryRequest.quantity());
         inventory.setQuantityReserved(inventory.getQuantityReserved() + reserveInventoryRequest.quantity());
@@ -57,9 +63,11 @@ public class InventoryService {
                 reserveInventoryRequest.quantity()
         );
         reservationService.createReservation(reservationRequest);
+
+        return new ApiResponse(200, "Product " + reserveInventoryRequest.productId() + " Reserved Successfully", null);
     }
 
-    public void sellInventory(String orderId, String productId, long quantity) {
+    public ApiResponse sellInventory(String orderId, String productId, long quantity) {
         Inventory inventory = inventoryRepository.findByProductId(productId);
         long reservedStock = inventory.getQuantityReserved();
         if (reservedStock < quantity) {
@@ -71,9 +79,11 @@ public class InventoryService {
         inventoryRepository.save(inventory);
 
         reservationService.deleteReservation(orderId, productId);
+
+        return new ApiResponse(200, "Product " + productId + " Sold Successfully", null);
     }
 
-    public void releaseInventory(String orderId, String productId, long quantity) {
+    public ApiResponse releaseInventory(String orderId, String productId, long quantity) {
         Inventory inventory = inventoryRepository.findByProductId(productId);
         long reservedStock = inventory.getQuantityReserved();
         if (reservedStock < quantity) {
@@ -85,10 +95,14 @@ public class InventoryService {
         inventoryRepository.save(inventory);
 
         reservationService.deleteReservation(orderId, productId);
+
+        return new ApiResponse(200, "Product " + productId + " Released Successfully", null);
     }
 
-    public void deleteAllInventory() {
+    public ApiResponse deleteAllInventory() {
         reservationService.deleteAllReservations();
         inventoryRepository.deleteAll();
+
+        return new ApiResponse(200, "All Inventory Deleted Successfully", null);
     }
 }

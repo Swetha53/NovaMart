@@ -1,10 +1,8 @@
 package com.novamart.inventory_service.controller;
 
-import com.novamart.inventory_service.dto.ReservationRequest;
-import com.novamart.inventory_service.model.Reservation;
+import com.novamart.inventory_service.dto.ApiResponse;
 import com.novamart.inventory_service.service.ReservationService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +14,7 @@ public class ReservationController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Reservation getReservation(@RequestParam(required = false) String orderId,
+    public ApiResponse getReservation(@RequestParam(required = false) String orderId,
                                       @RequestParam(required = false) String productId,
                                       @RequestParam(required = false) String reservationId) {
         if (orderId != null && productId != null) {
@@ -24,7 +22,7 @@ public class ReservationController {
         } else if (reservationId != null) {
             return reservationService.getReservationByReservationId(reservationId);
         } else {
-            throw new RuntimeException("Invalid request");
+            return new ApiResponse(401, "Bad Request", null);
         }
     }
 }

@@ -1,14 +1,13 @@
 package com.novamart.product_service.controller;
 
+import com.novamart.product_service.dto.ApiResponse;
 import com.novamart.product_service.dto.ReviewRequest;
 import com.novamart.product_service.dto.UpdateReviewRequest;
-import com.novamart.product_service.model.Reviews;
 import com.novamart.product_service.service.ReviewService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -19,14 +18,13 @@ public class ReviewController {
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public String addReview(@RequestBody ReviewRequest reviewRequest) {
-        reviewService.addReview(reviewRequest);
-        return "Review added successfully";
+    public ApiResponse addReview(@RequestBody ReviewRequest reviewRequest) {
+        return reviewService.addReview(reviewRequest);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Reviews> getReviews(@RequestParam(required = false) String productId,
+    public ApiResponse getReviews(@RequestParam(required = false) String productId,
                                     @RequestParam(required = false) String userId,
                                     @RequestParam(required = false) String merchantId) {
         if (userId != null) {
@@ -36,27 +34,25 @@ public class ReviewController {
         } else if (merchantId != null) {
             return reviewService.getReviewByMerchantId(merchantId);
         } else {
-            throw new IllegalArgumentException("Invalid request");
+            return new ApiResponse(401, "Bad Request", null);
         }
     }
 
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    public Reviews updateReview(@RequestBody UpdateReviewRequest updateReviewRequest) {
+    public ApiResponse updateReview(@RequestBody UpdateReviewRequest updateReviewRequest) {
         return reviewService.updateReview(updateReviewRequest);
     }
 
     @DeleteMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteReview(@RequestParam String reviewId) {
-        reviewService.deleteReview(reviewId);
-        return "Review deleted successfully";
+    public ApiResponse deleteReview(@RequestParam String reviewId) {
+        return reviewService.deleteReview(reviewId);
     }
 
     @DeleteMapping("/delete-all")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteAllReviews(@RequestParam String userId) {
-        reviewService.deleteAllReviews(userId);
-        return "All reviews deleted";
+    public ApiResponse deleteAllReviews(@RequestParam String userId) {
+        return reviewService.deleteAllReviews(userId);
     }
 }

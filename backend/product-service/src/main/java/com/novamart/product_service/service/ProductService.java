@@ -3,10 +3,7 @@ package com.novamart.product_service.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.novamart.product_service.client.InventoryClient;
 import com.novamart.product_service.client.UserClient;
-import com.novamart.product_service.dto.InventoryRequest;
-import com.novamart.product_service.dto.InventoryResponse;
-import com.novamart.product_service.dto.ProductRequest;
-import com.novamart.product_service.dto.ProductResponse;
+import com.novamart.product_service.dto.*;
 import com.novamart.product_service.model.Product;
 import com.novamart.product_service.model.Reviews;
 import com.novamart.product_service.repository.ProductRepository;
@@ -31,9 +28,10 @@ public class ProductService {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
 
-    public void createProduct(ProductRequest productRequest) {
-        if (!userClient.authenticateUser(productRequest.merchantId(), "accountType", "MERCHANT")) {
-            throw new RuntimeException("User not authenticated");
+    public ApiResponse createProduct(ProductRequest productRequest) {
+        ApiResponse user = userClient.authenticateUser(productRequest.merchantId(), "accountType", "MERCHANT");
+        if (user == null || user.status() != 200) {
+            return new ApiResponse(401, "User not authenticated", null);
         }
         Product product = Product.builder()
                 .productId(UUID.randomUUID().toString())
@@ -55,17 +53,18 @@ public class ProductService {
                 productRequest.quantity()
         );
 
-        log.info(inventoryClient.createProductInventory(inventoryRequest));
+        inventoryClient.createProductInventory(inventoryRequest);
         productRepository.save(product);
         publishProductUpdate(product);
+
+        return new ApiResponse(200, "Product created successfully", null);
     }
 
-    public List<ProductResponse> getAllProducts() {
+    public ApiResponse getAllProducts() {
         List<ProductResponse> productResponseList = new ArrayList<>();
         for (Product product : productRepository.findAll()) {
-            log.info(product.toString());
-            InventoryResponse inventoryResponse = inventoryClient.getInventoryByProductId(product.getProductId());
-            List<Reviews> reviews = reviewService.getReviewByProductId(product.getProductId());
+            InventoryResponse inventoryResponse = (InventoryResponse) inventoryClient.getInventoryByProductId(product.getProductId()).body().getFirst();
+            List<Reviews> reviews = (List<Reviews>) reviewService.getReviewByProductId(product.getProductId()).body();
             ProductResponse productResponse = new ProductResponse(
                     product.getProductId(),
                     product.getMerchantId(),
@@ -86,13 +85,13 @@ public class ProductService {
             );
             productResponseList.add(productResponse);
         }
-        return productResponseList;
+        return new ApiResponse(200, "All products fetched", productResponseList);
     }
 
-    public List<ProductResponse> getProduct(String productId) {
+    public ApiResponse getProduct(String productId) {
         Product product = productRepository.findByProductId(productId);
-        InventoryResponse inventoryResponse = inventoryClient.getInventoryByProductId(productId);
-        List<Reviews> reviews = reviewService.getReviewByProductId(productId);
+        InventoryResponse inventoryResponse = (InventoryResponse) inventoryClient.getInventoryByProductId(productId).body().getFirst();
+        List<Reviews> reviews = (List<Reviews>) reviewService.getReviewByProductId(productId).body();
         ProductResponse productResponse = new ProductResponse(
                 product.getProductId(),
                 product.getMerchantId(),
@@ -111,14 +110,14 @@ public class ProductService {
                 inventoryResponse.quantitySold(),
                 inventoryResponse.quantityReserved()
         );
-        return Collections.singletonList(productResponse);
+        return new ApiResponse(200, "Product fetched", Collections.singletonList(productResponse));
     }
 
-    public List<ProductResponse> getMerchantProducts(String merchantId) {
+    public ApiResponse getMerchantProducts(String merchantId) {
         List<ProductResponse> productResponseList = new ArrayList<>();
         for (Product product : productRepository.findByMerchantId(merchantId)) {
-            InventoryResponse inventoryResponse = inventoryClient.getInventoryByProductId(product.getProductId());
-            List<Reviews> reviews = reviewService.getReviewByProductId(product.getProductId());
+            InventoryResponse inventoryResponse = (InventoryResponse) inventoryClient.getInventoryByProductId(product.getProductId()).body().getFirst();
+            List<Reviews> reviews = (List<Reviews>) reviewService.getReviewByProductId(product.getProductId()).body();
             ProductResponse productResponse = new ProductResponse(
                     product.getProductId(),
                     product.getMerchantId(),
@@ -139,16 +138,19 @@ public class ProductService {
             );
             productResponseList.add(productResponse);
         }
-        return productResponseList;
+        return new ApiResponse(200, "Merchant products fetched", productResponseList);
     }
 
-    public void clearAllProducts(String userId) {
-        if (!userClient.authenticateUser(userId, "accountType", "ADMIN")) {
-            throw new RuntimeException("User not authenticated");
+    public ApiResponse clearAllProducts(String userId) {
+        ApiResponse user = userClient.authenticateUser(userId, "accountType", "ADMIN");
+        if (user == null || user.status() != 200) {
+            return new ApiResponse(401, "User not authenticated", null);
         }
-        log.info(inventoryClient.deleteAllInventory());
+        inventoryClient.deleteAllInventory();
         reviewService.deleteAllReviews(userId);
         productRepository.deleteAll();
+
+        return new ApiResponse(200, "All products deleted", null);
     }
 
     public void publishProductUpdate(Product product) {

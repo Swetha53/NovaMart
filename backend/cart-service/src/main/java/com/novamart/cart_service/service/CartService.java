@@ -2,6 +2,7 @@ package com.novamart.cart_service.service;
 
 import com.novamart.cart_service.client.ProductClient;
 import com.novamart.cart_service.client.UserClient;
+import com.novamart.cart_service.dto.ApiResponse;
 import com.novamart.cart_service.dto.CartRequest;
 import com.novamart.cart_service.dto.CartResponse;
 import com.novamart.cart_service.dto.ProductResponse;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -27,10 +29,11 @@ public class CartService {
     private final ProductClient productClient;
     private final UserClient userClient;
 
-    public void updateAndSaveCart(CartRequest cartRequest) {
+    public ApiResponse updateAndSaveCart(CartRequest cartRequest) {
 //        Check product availability
-        if (!userClient.authenticateUser(cartRequest.userId(), "accountType", "CUSTOMER")) {
-            throw new RuntimeException("User not authenticated");
+        ApiResponse user = userClient.authenticateUser(cartRequest.userId(), "accountType", "CUSTOMER");
+        if (user == null || user.status() != 200) {
+            return new ApiResponse(401, "User not authenticated", null);
         }
         Cart oldCart = cartRepository.findByUserId(cartRequest.userId());
         Cart cart = new Cart();
@@ -61,11 +64,12 @@ public class CartService {
 
         cartRepository.save(cart);
         cartItemRepository.save(cartItem);
+
+        return new ApiResponse(200, "Cart updated successfully", null);
     }
 
     private CartItem checkProduct(CartItem cartItem) {
-        log.info(cartItem.toString());
-        List<ProductResponse> productResponse = productClient.getProduct(cartItem.getProductId());
+        List<ProductResponse> productResponse = (List<ProductResponse>) productClient.getProduct(cartItem.getProductId()).body();
         if (productResponse == null || productResponse.isEmpty()) {
             cartItem.setQuantity(0);
             cartItem.setStatus("DELETED");
@@ -94,9 +98,10 @@ public class CartService {
         return totalAmount.multiply(new BigDecimal("0.1"));
     }
 
-    public CartResponse getCart(String userId) {
-        if (!userClient.authenticateUser(userId, "accountType", "CUSTOMER")) {
-            throw new RuntimeException("User not authenticated");
+    public ApiResponse getCart(String userId) {
+        ApiResponse user = userClient.authenticateUser(userId, "accountType", "CUSTOMER");
+        if (user == null || user.status() != 200) {
+            return new ApiResponse(401, "User not authenticated", null);
         }
         Cart cart = cartRepository.findByUserId(userId);
         List<CartItem> cartItems = new ArrayList<>();
@@ -109,43 +114,53 @@ public class CartService {
                 cartItems.set(i, checkProduct(cartItems.get(i)));
             }
         }
-        return new CartResponse(
+        List<CartResponse> cartResponse = Collections.singletonList(new CartResponse(
                 cart.getUserId(),
                 cart.getTotalAmount(),
                 cart.getCurrencyCode(),
                 cart.getCreatedAt(),
                 cart.getUpdatedAt(),
                 cartItems
-        );
+        ));
+        return new ApiResponse(200, "Cart retrieved successfully", cartResponse);
     }
 
     @Transactional
-    public void clearCart(String userId) {
-        if (userClient.authenticateUser(userId, "accountType", "MERCHANT")) {
-            throw new RuntimeException("User not authenticated");
+    public ApiResponse clearCart(String userId) {
+        ApiResponse user = userClient.authenticateUser(userId, "accountType", "MERCHANT");
+        if (user == null || user.status() != 200) {
+            return new ApiResponse(401, "User not authenticated", null);
         }
         cartItemRepository.deleteByUserId(userId);
         cartRepository.deleteByUserId(userId);
+
+        return new ApiResponse(200, "Cart cleared successfully", null);
     }
 
     @Transactional
-    public void deleteCartItem(String userId, String productId) {
-        if (!userClient.authenticateUser(userId, "accountType", "CUSTOMER")) {
-            throw new RuntimeException("User not authenticated");
+    public ApiResponse deleteCartItem(String userId, String productId) {
+        ApiResponse user = userClient.authenticateUser(userId, "accountType", "CUSTOMER");
+        if (user == null || user.status() != 200) {
+            return new ApiResponse(401, "User not authenticated", null);
         }
         cartItemRepository.deleteByUserIdAndProductId(userId, productId);
         Cart cart = cartRepository.findByUserId(userId);
         List<CartItem> cartItems = cartItemRepository.findByUserId(userId);
         cart.setTotalAmount(calculateTotalAmount(new BigDecimal(0), cartItems));
         cartRepository.save(cart);
+
+        return new ApiResponse(200, "Cart Item " + productId + " Deleted Successfully", null);
     }
 
     @Transactional
-    public void deleteAllCarts(String userId) {
-        if (!userClient.authenticateUser(userId, "accountType", "ADMIN")) {
-            throw new RuntimeException("User not authenticated");
+    public ApiResponse deleteAllCarts(String userId) {
+        ApiResponse user = userClient.authenticateUser(userId, "accountType", "ADMIN");
+        if (user == null || user.status() != 200) {
+            return new ApiResponse(401, "User not authenticated", null);
         }
         cartItemRepository.deleteAll();
         cartRepository.deleteAll();
+
+        return new ApiResponse(200, "All Carts Deleted Successfully", null);
     }
 }

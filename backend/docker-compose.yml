@@ -146,5 +146,5 @@ services:
     depends_on:
       - kafka
     environment:
-      DEVTIRO_KAFKA_TOPICS: 'order-placed, order-delivered, order-cancelled, payment-completed, refund-initiated, refund-completed, review-added, profile-completed, profile-updated'
+      DEVTIRO_KAFKA_TOPICS: 'order-placed, order-delivered, order-cancelled, payment-completed, refund-initiated, refund-completed, review-added, profile-completed, profile-updated, profile-deleted'
       SPRING_KAFKA_BOOTSTRAP_SERVERS: 'kafka:29092'

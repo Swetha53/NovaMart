@@ -1,15 +1,14 @@
 package com.novamart.user_service.controller;
 
+import com.novamart.user_service.dto.ApiResponse;
 import com.novamart.user_service.dto.LoginRequest;
 import com.novamart.user_service.dto.PasswordResetRequest;
 import com.novamart.user_service.dto.UserRequest;
-import com.novamart.user_service.model.User;
 import com.novamart.user_service.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -20,57 +19,56 @@ public class UserController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerUser(@RequestBody UserRequest userRequest) {
-        userService.registerUser(userRequest);
+    public ApiResponse registerUser(@RequestBody UserRequest userRequest) {
+        return userService.registerUser(userRequest);
     }
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public User loginUser(@RequestBody LoginRequest loginRequest) {
+    public ApiResponse loginUser(@RequestBody LoginRequest loginRequest) {
         return userService.loginUser(loginRequest);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public User getUser(@RequestParam String userId) {
+    public ApiResponse getUser(@RequestParam String userId) {
         return userService.getUser(userId);
     }
 
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    public User updateUser(@RequestBody UserRequest userRequest) {
+    public ApiResponse updateUser(@RequestBody UserRequest userRequest) {
         return userService.updateUser(userRequest);
     }
 
     @PutMapping("/reset-password")
     @ResponseStatus(HttpStatus.OK)
-    public void resetPassword(@RequestBody PasswordResetRequest passwordResetRequest) {
-        userService.resetPassword(passwordResetRequest);
+    public ApiResponse resetPassword(@RequestBody PasswordResetRequest passwordResetRequest) {
+        return userService.resetPassword(passwordResetRequest);
     }
 
     @DeleteMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteUser(@RequestParam String userId) {
-        userService.deleteUser(userId);
+    public ApiResponse deleteUser(@RequestParam String userId) {
+        return userService.deleteUser(userId);
     }
 
     @GetMapping("/authenticate")
     @ResponseStatus(HttpStatus.OK)
-    public boolean authenticateUser(@RequestParam String userId, @RequestParam String checkField,
+    public ApiResponse authenticateUser(@RequestParam String userId, @RequestParam String checkField,
                                     @RequestParam String value) {
         return userService.authenticateUser(userId, checkField, value);
     }
 
     @DeleteMapping("/delete-all")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteAllUsers() {
-        userService.deleteAllUsers();
-        return "All users deleted successfully";
+    public ApiResponse deleteAllUsers() {
+        return userService.deleteAllUsers();
     }
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<User> getAllUsers() {
+    public ApiResponse getAllUsers() {
         return userService.getAllUsers();
     }
 }

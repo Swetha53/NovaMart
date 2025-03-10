@@ -1,6 +1,7 @@
 package com.novamart.search_service.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.novamart.search_service.dto.ApiResponse;
 import com.novamart.search_service.dto.ProductRequest;
 import com.novamart.search_service.model.Product;
 import com.novamart.search_service.repository.ProductRepository;
@@ -28,34 +29,35 @@ public class ProductService {
         }
     }
 
-    public List<Product> searchProducts(ProductRequest productRequest) {
+    public ApiResponse searchProducts(ProductRequest productRequest) {
+        List<Product> products;
         if (productRequest.name() == null) {
             if (productRequest.currencyCode() == null) {
                 if (productRequest.categories() == null) {
                     if (productRequest.attributes() == null) {
-                        throw new RuntimeException("Request must contain at least one search parameter");
+                        return new ApiResponse(400, "Bad Request", null);
                     } else {
-                        return productRepository.searchByColorAttribute(productRequest.attributes());
+                        products = productRepository.searchByColorAttribute(productRequest.attributes());
                     }
                 } else {
                     if (productRequest.attributes() == null) {
-                        return productRepository.searchByCategories(productRequest.categories());
+                        products = productRepository.searchByCategories(productRequest.categories());
                     } else {
-                        return productRepository.searchByCategoriesAndColorAttribute(productRequest.categories(), productRequest.attributes());
+                        products = productRepository.searchByCategoriesAndColorAttribute(productRequest.categories(), productRequest.attributes());
                     }
                 }
             } else {
                 if (productRequest.categories() == null) {
                     if (productRequest.attributes() == null) {
-                        return productRepository.searchByCurrencyCode(productRequest.currencyCode());
+                        products = productRepository.searchByCurrencyCode(productRequest.currencyCode());
                     } else {
-                        return productRepository.searchByCurrencyCodeAndColorAttribute(productRequest.currencyCode(), productRequest.attributes());
+                        products = productRepository.searchByCurrencyCodeAndColorAttribute(productRequest.currencyCode(), productRequest.attributes());
                     }
                 } else {
                     if (productRequest.attributes() == null) {
-                        return productRepository.searchByCurrencyCodeAndCategories(productRequest.currencyCode(), productRequest.categories());
+                        products = productRepository.searchByCurrencyCodeAndCategories(productRequest.currencyCode(), productRequest.categories());
                     } else {
-                        return productRepository.searchByCurrencyCodeCategoriesAndColorAttribute(productRequest.currencyCode(), productRequest.categories(), productRequest.attributes());
+                        products = productRepository.searchByCurrencyCodeCategoriesAndColorAttribute(productRequest.currencyCode(), productRequest.categories(), productRequest.attributes());
                     }
                 }
             }
@@ -63,32 +65,33 @@ public class ProductService {
             if (productRequest.currencyCode() == null) {
                 if (productRequest.categories() == null) {
                     if (productRequest.attributes() == null) {
-                        return productRepository.searchByName(productRequest.name());
+                        products = productRepository.searchByName(productRequest.name());
                     } else {
-                        return productRepository.searchByNameAndColorAttribute(productRequest.name(), productRequest.attributes());
+                        products = productRepository.searchByNameAndColorAttribute(productRequest.name(), productRequest.attributes());
                     }
                 } else {
                     if (productRequest.attributes() == null) {
-                        return productRepository.searchByNameAndCategories(productRequest.name(), productRequest.categories());
+                        products = productRepository.searchByNameAndCategories(productRequest.name(), productRequest.categories());
                     } else {
-                        return productRepository.searchByNameCategoriesAndColorAttribute(productRequest.name(), productRequest.categories(), productRequest.attributes());
+                        products = productRepository.searchByNameCategoriesAndColorAttribute(productRequest.name(), productRequest.categories(), productRequest.attributes());
                     }
                 }
             } else {
                 if (productRequest.categories() == null) {
                     if (productRequest.attributes() == null) {
-                        return productRepository.searchByNameAndCurrencyCode(productRequest.name(), productRequest.currencyCode());
+                        products = productRepository.searchByNameAndCurrencyCode(productRequest.name(), productRequest.currencyCode());
                     } else {
-                        return productRepository.searchByNameCurrencyAndColorAttribute(productRequest.name(), productRequest.currencyCode(), productRequest.attributes());
+                        products = productRepository.searchByNameCurrencyAndColorAttribute(productRequest.name(), productRequest.currencyCode(), productRequest.attributes());
                     }
                 } else {
                     if (productRequest.attributes() == null) {
-                        return productRepository.searchByNameCurrencyCodeAndCategories(productRequest.name(), productRequest.currencyCode(), productRequest.categories());
+                        products = productRepository.searchByNameCurrencyCodeAndCategories(productRequest.name(), productRequest.currencyCode(), productRequest.categories());
                     } else {
-                        return productRepository.searchByAllFilters(productRequest.name(), productRequest.currencyCode(), productRequest.categories(), productRequest.attributes());
+                        products = productRepository.searchByAllFilters(productRequest.name(), productRequest.currencyCode(), productRequest.categories(), productRequest.attributes());
                     }
                 }
             }
         }
+        return new ApiResponse(200, "Success", products);
     }
 }

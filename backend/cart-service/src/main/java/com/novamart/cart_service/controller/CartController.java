@@ -1,8 +1,7 @@
 package com.novamart.cart_service.controller;
 
+import com.novamart.cart_service.dto.ApiResponse;
 import com.novamart.cart_service.dto.CartRequest;
-import com.novamart.cart_service.dto.CartResponse;
-import com.novamart.cart_service.model.Cart;
 import com.novamart.cart_service.service.CartService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,35 +15,31 @@ public class CartController {
 
     @PostMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    public String updateAndSaveCart(@RequestBody CartRequest cartRequest) {
-        cartService.updateAndSaveCart(cartRequest);
-        return "Cart Updated Successfully";
+    public ApiResponse updateAndSaveCart(@RequestBody CartRequest cartRequest) {
+        return cartService.updateAndSaveCart(cartRequest);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public CartResponse getCart(@RequestParam String userId) {
+    public ApiResponse getCart(@RequestParam String userId) {
         return cartService.getCart(userId);
     }
 
     @DeleteMapping("/clear")
     @ResponseStatus(HttpStatus.OK)
-    public String clearCart(@RequestParam String userId) {
-        cartService.clearCart(userId);
-        return "Cart Cleared Successfully";
+    public ApiResponse clearCart(@RequestParam String userId) {
+        return cartService.clearCart(userId);
     }
 
     @DeleteMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteCartItem(@RequestParam String userId, @RequestParam String productId) {
-        cartService.deleteCartItem(userId, productId);
-        return "Cart Item " + productId + " Deleted Successfully";
+    public ApiResponse deleteCartItem(@RequestParam String userId, @RequestParam String productId) {
+        return cartService.deleteCartItem(userId, productId);
     }
 
     @DeleteMapping("/delete-all")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteAllCarts(@RequestParam String userId) {
-        cartService.deleteAllCarts(userId);
-        return "All Carts Deleted Successfully";
+    public ApiResponse deleteAllCarts(@RequestParam String userId) {
+        return cartService.deleteAllCarts(userId);
     }
 }

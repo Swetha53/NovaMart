@@ -2,6 +2,7 @@ package com.novamart.order_service.service;
 
 import com.novamart.order_service.client.InventoryClient;
 import com.novamart.order_service.client.UserClient;
+import com.novamart.order_service.dto.ApiResponse;
 import com.novamart.order_service.dto.OrderRequest;
 import com.novamart.order_service.dto.ReservationRequest;
 import com.novamart.order_service.dto.UserOrderResponse;
@@ -14,6 +15,7 @@ import com.novamart.order_service.repository.StatusHistoryRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,9 +31,11 @@ public class OrderService {
     private final StatusHistoryRepository statusHistoryRepository;
     private final InventoryClient inventoryClient;
     private final UserClient userClient;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public void placeOrder(OrderRequest orderRequest) {
-        if (userClient.authenticateUser(orderRequest.userId(), "accountType","CUSTOMER")) {
+    public ApiResponse placeOrder(OrderRequest orderRequest) {
+        ApiResponse user = userClient.authenticateUser(orderRequest.userId(), "accountType","CUSTOMER");
+        if (user != null && user.status() == 200) {
 //            Save order details
             Order order = new Order();
 
@@ -65,7 +69,7 @@ public class OrderService {
                         orderItem.getProductId(),
                         orderItem.getQuantity()
                 );
-                log.info(inventoryClient.reserveInventory(reservationRequest));
+                inventoryClient.reserveInventory(reservationRequest);
             }
 
     //        Save Order Status History Details
@@ -79,14 +83,19 @@ public class OrderService {
             orderRepository.save(order);
             orderItemRepository.saveAll(orderItemList);
             statusHistoryRepository.save(statusHistory);
+
+            publishKafkaEvent(orderRequest.userEmail(), "order-placed");
+
+            return new ApiResponse(200, "Order Placed Successfully", null);
         } else {
-            throw new RuntimeException("User not authenticated");
+            return new ApiResponse(401, "User not authenticated", null);
         }
     }
 
-    public List<UserOrderResponse> getUserOrders(String userId) {
-        if (!userClient.authenticateUser(userId, "accountType", "CUSTOMER")) {
-            throw new RuntimeException("User not authenticated");
+    public ApiResponse getUserOrders(String userId) {
+        ApiResponse user = userClient.authenticateUser(userId, "accountType", "CUSTOMER");
+        if (user == null || user.status() != 200) {
+            return new ApiResponse(401, "User not authenticated", null);
         }
         List<Order> orders = orderRepository.findByUserId(userId);
         List<UserOrderResponse> userOrderResponse = new ArrayList<>();
@@ -98,28 +107,29 @@ public class OrderService {
                     order.getCreatedAt(), orderItems));
         }
 
-        return userOrderResponse;
+        return new ApiResponse(200, "Success", userOrderResponse);
     }
 
-    public List<OrderItem> getMerchantOrders(String merchantId) {
-        if (!userClient.authenticateUser(merchantId, "accountType", "MERCHANT")) {
-            throw new RuntimeException("User not authenticated");
+    public ApiResponse getMerchantOrders(String merchantId) {
+        ApiResponse user = userClient.authenticateUser(merchantId, "accountType", "MERCHANT");
+        if (user == null || user.status() != 200) {
+            return new ApiResponse(401, "User not authenticated", null);
         }
-        return orderItemRepository.findByMerchantId(merchantId);
+        return new ApiResponse(200, "Success", orderItemRepository.findByMerchantId(merchantId));
     }
 
-    public List<StatusHistory> getOrderStatusHistory(String orderId) {
-        return statusHistoryRepository.findByOrderId(orderId);
+    public ApiResponse getOrderStatusHistory(String orderId) {
+        return new ApiResponse(200, "Success", statusHistoryRepository.findByOrderId(orderId));
     }
 
-    public String deliverOrder(String orderId) {
+    public ApiResponse deliverOrder(String orderId, String userEmail) {
         Order order = orderRepository.findByOrderId(orderId);
         if (order == null) {
-            return "Order not found";
+            return new ApiResponse(404, "Order not found", null);
         }
 
         if (!order.getStatus().equals("CONFIRMED")) {
-            return "Order cannot be delivered";
+            return new ApiResponse(400, "Order cannot be delivered", null);
         }
 
         order.setStatus("DELIVERED");
@@ -127,11 +137,7 @@ public class OrderService {
 
         List<OrderItem> orderItems = orderItemRepository.findByOrderId(order.getOrderId());
         for (OrderItem orderItem : orderItems) {
-            log.info(
-                    inventoryClient.sellInventory(
-                            order.getOrderId(), orderItem.getProductId(), orderItem.getQuantity()
-                    )
-            );
+            inventoryClient.sellInventory(order.getOrderId(), orderItem.getProductId(), orderItem.getQuantity());
         }
 
         StatusHistory statusHistory = new StatusHistory();
@@ -144,20 +150,23 @@ public class OrderService {
         orderRepository.save(order);
         statusHistoryRepository.save(statusHistory);
 
-        return "Order Delivered Successfully";
+        publishKafkaEvent(userEmail, "order-delivered");
+
+        return new ApiResponse(200, "Order Delivered Successfully", null);
     }
 
-    public String cancelOrder(String orderId, String userId) {
-        if (!userClient.authenticateUser(userId, "accountType", "CUSTOMER")) {
-            return "User not authenticated";
+    public ApiResponse cancelOrder(String orderId, String userId, String userEmail) {
+        ApiResponse user = userClient.authenticateUser(userId, "accountType", "CUSTOMER");
+        if (user == null || user.status() != 200) {
+            return new ApiResponse(401, "User not authenticated", null);
         }
         Order order = orderRepository.findByOrderId(orderId);
         if (order == null) {
-            return "Order not found";
+            return new ApiResponse(404, "Order not found", null);
         }
 
         if (!order.getStatus().equals("CONFIRMED")) {
-            return "Order cannot be cancelled";
+           return new ApiResponse(400, "Order cannot be cancelled", null);
         }
 
         order.setStatus("CANCELLED");
@@ -165,11 +174,7 @@ public class OrderService {
 
         List<OrderItem> orderItems = orderItemRepository.findByOrderId(order.getOrderId());
         for (OrderItem orderItem : orderItems) {
-            log.info(
-                    inventoryClient.releaseInventory(
-                            order.getOrderId(), orderItem.getProductId(), orderItem.getQuantity()
-                    )
-            );
+            inventoryClient.releaseInventory(order.getOrderId(), orderItem.getProductId(), orderItem.getQuantity());
         }
 
         StatusHistory statusHistory = new StatusHistory();
@@ -182,16 +187,29 @@ public class OrderService {
         orderRepository.save(order);
         statusHistoryRepository.save(statusHistory);
 
-        return "Order Cancelled Successfully";
+        publishKafkaEvent(userEmail, "order-cancelled");
+
+        return new ApiResponse(200, "Order Cancelled Successfully", null);
     }
 
     @Transactional
-    public void clearOrders(String userId) {
-        if (!userClient.authenticateUser(userId, "accountType", "ADMIN")) {
-            throw new RuntimeException("User not authenticated");
+    public ApiResponse clearOrders(String userId) {
+        ApiResponse user = userClient.authenticateUser(userId, "accountType", "ADMIN");
+        if (user == null || user.status() != 200) {
+            return new ApiResponse(401, "User not authenticated", null);
         }
         orderItemRepository.deleteAll();
         statusHistoryRepository.deleteAll();
         orderRepository.deleteAll();
+
+        return new ApiResponse(200, "All Orders Cleared Successfully", null);
+    }
+
+    public void publishKafkaEvent(String userEmail, String topic) {
+        try {
+            kafkaTemplate.send(topic, userEmail);
+        } catch (Exception e) {
+            log.error("Error publishing order placed: {}", e.getMessage());
+        }
     }
 }

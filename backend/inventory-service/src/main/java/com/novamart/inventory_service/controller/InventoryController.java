@@ -1,8 +1,8 @@
 package com.novamart.inventory_service.controller;
 
+import com.novamart.inventory_service.dto.ApiResponse;
 import com.novamart.inventory_service.dto.InventoryRequest;
 import com.novamart.inventory_service.dto.ReserveInventoryRequest;
-import com.novamart.inventory_service.model.Inventory;
 import com.novamart.inventory_service.service.InventoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,51 +16,45 @@ public class InventoryController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public String createProductInventory(@RequestBody InventoryRequest inventoryRequest) {
-        inventoryService.createProductInventory(inventoryRequest);
-        return "Product " + inventoryRequest.productId() + " Created Successfully";
+    public ApiResponse createProductInventory(@RequestBody InventoryRequest inventoryRequest) {
+        return inventoryService.createProductInventory(inventoryRequest);
     }
 
     @PutMapping("/restock")
     @ResponseStatus(HttpStatus.OK)
-    public String restockInventory(@RequestParam String productId, @RequestParam long quantity) {
-        inventoryService.restockInventory(productId, quantity);
-        return "Product " + productId + " Restocked Successfully";
+    public ApiResponse restockInventory(@RequestParam String productId, @RequestParam long quantity) {
+        return inventoryService.restockInventory(productId, quantity);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Inventory getInventoryByProductId(@RequestParam String productId) {
+    public ApiResponse getInventoryByProductId(@RequestParam String productId) {
         return inventoryService.getInventoryByProductId(productId);
     }
 
     @PutMapping("/reserve")
     @ResponseStatus(HttpStatus.OK)
-    public String reserveInventory(@RequestBody ReserveInventoryRequest reserveInventoryRequest) {
-        inventoryService.reserveInventory(reserveInventoryRequest);
-        return "Product " + reserveInventoryRequest.productId() + " Reserved Successfully";
+    public ApiResponse reserveInventory(@RequestBody ReserveInventoryRequest reserveInventoryRequest) {
+        return inventoryService.reserveInventory(reserveInventoryRequest);
     }
 
     @PutMapping("/sell")
     @ResponseStatus(HttpStatus.OK)
-    public String sellInventory(@RequestParam String orderId, @RequestParam String productId,
+    public ApiResponse sellInventory(@RequestParam String orderId, @RequestParam String productId,
                                 @RequestParam long quantity) {
-        inventoryService.sellInventory(orderId, productId, quantity);
-        return "Product " + productId + " Sold Successfully";
+        return inventoryService.sellInventory(orderId, productId, quantity);
     }
 
     @PutMapping("/release")
     @ResponseStatus(HttpStatus.OK)
-    public String releaseInventory(@RequestParam String orderId, @RequestParam String productId,
+    public ApiResponse releaseInventory(@RequestParam String orderId, @RequestParam String productId,
                                    @RequestParam long quantity) {
-        inventoryService.releaseInventory(orderId, productId, quantity);
-        return "Product " + productId + " Released Successfully";
+        return inventoryService.releaseInventory(orderId, productId, quantity);
     }
 
     @DeleteMapping("/delete-all")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteAllInventory() {
-        inventoryService.deleteAllInventory();
-        return "All Inventory Deleted Successfully";
+    public ApiResponse deleteAllInventory() {
+        return inventoryService.deleteAllInventory();
     }
 }

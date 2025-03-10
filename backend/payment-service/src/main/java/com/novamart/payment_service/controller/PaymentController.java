@@ -1,7 +1,7 @@
 package com.novamart.payment_service.controller;
 
+import com.novamart.payment_service.dto.ApiResponse;
 import com.novamart.payment_service.dto.PaymentRequest;
-import com.novamart.payment_service.model.Payment;
 import com.novamart.payment_service.service.PaymentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,21 +15,19 @@ public class PaymentController {
 
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public String savePayment(@RequestBody PaymentRequest paymentRequest) {
-        paymentService.savePayment(paymentRequest);
-        return "Payment Record Created Successfully";
+    public ApiResponse savePayment(@RequestBody PaymentRequest paymentRequest) {
+        return paymentService.savePayment(paymentRequest);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Payment getPaymentByOrderId(@RequestParam String orderId, @RequestParam String userId) {
+    public ApiResponse getPaymentByOrderId(@RequestParam String orderId, @RequestParam String userId) {
         return paymentService.getPaymentByOrderId(orderId, userId);
     }
 
     @DeleteMapping("/delete-all")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteAllPayments(@RequestParam String userId) {
-        paymentService.deleteAllPayments(userId);
-        return "All Payment and Refund Records Deleted Successfully";
+    public ApiResponse deleteAllPayments(@RequestParam String userId) {
+        return paymentService.deleteAllPayments(userId);
     }
 }
