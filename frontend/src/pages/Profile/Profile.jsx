@@ -30,7 +30,7 @@ function Profile() {
     const loadUserDetails = async () => {
       try {
         const tempUserDetails = await fetchUserDetails(userId);
-        setUserDetails(tempUserDetails);
+        setUserDetails(tempUserDetails.body[0]);
       } catch (err) {
         toggleTicker(true, err.message);
       } finally {
@@ -41,7 +41,7 @@ function Profile() {
     const loadUserReviews = async () => {
       try {
         const tempUserReviews = await fetchUserReviews(userId);
-        setReviews(tempUserReviews);
+        setReviews(tempUserReviews.body);
       } catch (err) {
         toggleTicker(true, err.message);
       } finally {
@@ -56,7 +56,7 @@ function Profile() {
   const loadUserOrders = async () => {
     try {
       const tempUserOrders = await fetchUserOrders(userId);
-      setOrders(tempUserOrders);
+      setOrders(tempUserOrders.body);
     } catch (err) {
       toggleTicker(true, err.message);
     } finally {
@@ -82,7 +82,7 @@ function Profile() {
         />
       )}
       <div className="profile__image">
-        {userDetails.avatar ? (
+        {userDetails && userDetails.avatar ? (
           <div>
             <img src={userDetails.avatar} alt="Profile Image" />
           </div>

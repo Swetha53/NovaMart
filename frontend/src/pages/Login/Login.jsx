@@ -24,9 +24,9 @@ const Login = () => {
   const checkCredentials = async () => {
     try {
       const userData = await checkLoginCredentials(email, password);
-      sessionStorage.setItem("userId", userData.userId);
-      sessionStorage.setItem("userName", userData.firstName);
-      sessionStorage.setItem("avatar", userData.avatar);
+      sessionStorage.setItem("userId", userData.body[0].userId);
+      sessionStorage.setItem("userName", userData.body[0].firstName);
+      sessionStorage.setItem("avatar", userData.body[0].avatar);
       navigate("/");
     } catch (err) {
       toggleTicker(true, err.message);

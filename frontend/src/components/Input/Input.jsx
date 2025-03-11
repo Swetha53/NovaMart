@@ -7,7 +7,6 @@ function Input(props) {
     placeholder,
     onChangeHandler,
     reverse,
-    inputPattern,
     width,
     name,
     error,

@@ -1,0 +1,80 @@
+@use "./../../config/colors" as c;
+
+.photo {
+  width: 20vw;
+  aspect-ratio: 4/5;
+  border: 3px dotted c.$secondary;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  cursor: pointer;
+  position: relative;
+  &:hover {
+    cursor: pointer;
+    background-color: c.$secondary;
+    border: none;
+    h3 {
+      text-decoration: underline;
+    }
+  }
+  &__image {
+    height: 50%;
+    aspect-ratio: 1/1;
+    border-radius: 8px;
+    &:hover {
+      height: 60%;
+    }
+  }
+  &__details {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  &__footer {
+    width: 90%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 12%;
+    img {
+      width: 12%;
+      aspect-ratio: 1/1;
+      background-color: c.$secondary;
+      padding: 0.25rem;
+      border-radius: 50%;
+      &:hover {
+        background-color: c.$tertiary;
+      }
+    }
+    &__availability {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      height: 100%;
+      &__color {
+        height: 40%;
+        aspect-ratio: 1/1;
+        border-radius: 50%;
+        background-color: c.$secondary;
+        &-grey {
+          background-color: c.$normal;
+        }
+        &-orange {
+          background-color: c.$warning;
+        }
+        &-red {
+          background-color: c.$error;
+        }
+      }
+    }
+    &__review {
+      width: 30%;
+      text-align: right;
+    }
+  }
+}

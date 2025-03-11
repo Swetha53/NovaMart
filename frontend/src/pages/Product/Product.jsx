@@ -6,6 +6,7 @@ import ImageBlock from "../../components/ImageBlock/ImageBlock";
 import Button from "../../components/Button/Button";
 import Counter from "../../components/Counter/Counter";
 import PlaceholderImage from "./../../assets/placeholder.jpg";
+import Ticker from "../../components/Ticker/Ticker";
 
 function Product() {
   const { productId } = useParams();
@@ -56,12 +57,12 @@ function Product() {
     const loadDetails = async () => {
       try {
         const tempProductDetails = await fetchProductDetails(productId);
-        setProductDetails(tempProductDetails[0]);
-        setAttributes(tempProductDetails[0].attributes);
-        if (tempProductDetails[0].images.length == 0) {
+        setProductDetails(tempProductDetails.body[0]);
+        setAttributes(tempProductDetails.body[0].attributes);
+        if (tempProductDetails.body[0].images.length == 0) {
           return;
         }
-        setSelectedImages(tempProductDetails[0].images);
+        setSelectedImages(tempProductDetails.body[0].images);
       } catch (err) {
         toggleTicker(true, err.message);
       } finally {
