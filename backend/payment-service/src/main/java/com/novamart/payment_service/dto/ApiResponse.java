@@ -1,6 +1,0 @@
-package com.novamart.payment_service.dto;
-
-import java.util.List;
-
-public record ApiResponse(int status, String message, List<?> body) {
-}
