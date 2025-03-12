@@ -27,7 +27,7 @@ const Login = () => {
       sessionStorage.setItem("userId", userData.body[0].userId);
       sessionStorage.setItem("userName", userData.body[0].firstName);
       sessionStorage.setItem("avatar", userData.body[0].avatar);
-      navigate("");
+      navigate("/");
     } catch (err) {
       toggleTicker(true, err.message);
     } finally {

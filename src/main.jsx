@@ -13,6 +13,7 @@ import Cart from "./pages/Cart/Cart.jsx";
 import Product from "./pages/Product/Product.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
 import Register from "./pages/Register/Register.jsx";
+import Checkout from "./pages/Checkout/Checkout.jsx";
 
 const router = createHashRouter(
   createRoutesFromElements(
@@ -20,6 +21,7 @@ const router = createHashRouter(
       <Route index element={<Dashboard />} />
       <Route path="login" element={<Login />} />
       <Route path="cart" element={<Cart />} />
+      <Route path="checkout" element={<Checkout />} />
       <Route path="product" element={<Product />}>
         <Route path=":productId" element={<Product />} />
       </Route>

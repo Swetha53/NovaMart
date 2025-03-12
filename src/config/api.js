@@ -126,6 +126,21 @@ const getCartDetails = async (userId) => {
   }
 };
 
+const removeItemFromCart = async (userId, productId) => {
+  try {
+    const response = await axios.delete(
+      `${CART_URL}/delete?userId=${userId}&productId=${productId}`
+    );
+    if (response.data && response.data.status == 200) {
+      return response.data;
+    } else {
+      throw response.message;
+    }
+  } catch (error) {
+    throw `Error updating cart: ${error}`;
+  }
+};
+
 export {
   checkLoginCredentials,
   registerUser,
@@ -136,4 +151,5 @@ export {
   fetchUserOrders,
   updateCart,
   getCartDetails,
+  removeItemFromCart,
 };

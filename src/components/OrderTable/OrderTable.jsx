@@ -2,27 +2,6 @@ import "./OrderTable.scss";
 import Button from "./../Button/Button";
 import Image from "./../../assets/image.png";
 
-// {
-//     "orderId": "cb55c108-af1a-4a13-9169-15226cfd7253",
-//     "userId": "9633ec2b-7e0e-466e-866a-159afccf7542",
-//     "orderStatus": "DELIVERED",
-//     "totalAmount": 230.00,
-//     "currencyCode": "CAD",
-//     "createdAt": 1738788348035,
-//     "orderItemList": [
-//         {
-//             "orderItemId": "757eecad-0e5d-4f71-8e85-e8c52f4350c6",
-//             "orderId": "cb55c108-af1a-4a13-9169-15226cfd7253",
-//             "productId": "eb7ab6de-aafd-4023-90b9-3106dddeadc8",
-//             "merchantId": "7f6852dc-ee5d-4ad4-8a26-7ed381cfdd63",
-//             "quantity": 2,
-//             "unitPrice": 50.00,
-//             "totalPrice": 100.00,
-//             "createdAt": 1738788348036
-//         }
-//     ]
-// }
-
 function OrderTable(props) {
   const getProductSupport = () => {
     console.log("Get Product Support");

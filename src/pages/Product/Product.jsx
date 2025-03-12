@@ -8,6 +8,8 @@ import Counter from "../../components/Counter/Counter";
 import PlaceholderImage from "./../../assets/placeholder.jpg";
 import Ticker from "../../components/Ticker/Ticker";
 
+// TODO add reviews of the product
+
 function Product() {
   const { productId } = useParams();
   const userId = sessionStorage.getItem("userId");

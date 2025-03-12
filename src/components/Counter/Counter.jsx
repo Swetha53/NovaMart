@@ -9,8 +9,8 @@ function Counter(props) {
 
   const onChangeEventHandler = (tempValue) => {
     if (value + tempValue <= maxQuantity && value + tempValue > 0) {
+      props.onChangeEventHandler(value + tempValue);
       setValue(value + tempValue);
-      props.onChangeEventHandler(value);
     }
   };
   return (
