@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Counter.scss";
 import upArrow from "./../../assets/up_arrow.png";
 import downArrow from "./../../assets/down_arrow.png";
 
 function Counter(props) {
-  const [value, setValue] = useState(1);
+  const { quantity, maxQuantity } = props;
+  const [value, setValue] = useState(quantity ? quantity : 1);
 
   const onChangeEventHandler = (tempValue) => {
-    if (value + tempValue <= props.maxQuantity && value + tempValue > 0) {
+    if (value + tempValue <= maxQuantity && value + tempValue > 0) {
       setValue(value + tempValue);
       props.onChangeEventHandler(value);
     }
@@ -17,10 +18,8 @@ function Counter(props) {
       <div className="counter__display">{value}</div>
       <div className="counter__arrows">
         <button
-          className={
-            value == props.maxQuantity ? "counter__arrows-disabled" : ""
-          }
-          disabled={value == props.maxQuantity}
+          className={value == maxQuantity ? "counter__arrows-disabled" : ""}
+          disabled={value == maxQuantity}
           onClick={() => {
             onChangeEventHandler(1);
           }}

@@ -38,7 +38,7 @@ function Photo(props) {
     }
   };
   const navigateToProduct = () => {
-    navigate("/product/" + details.productId);
+    navigate("product/" + details.productId);
   };
   const startChangingImages = () => {
     if (!intervalRef.current) {
