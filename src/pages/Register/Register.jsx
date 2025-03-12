@@ -149,7 +149,7 @@ function Register() {
         toggleTicker(true, err.message);
       } finally {
         // setLoading(false);
-        navigate("/");
+        navigate("");
       }
     }
   };

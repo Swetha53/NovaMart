@@ -18,7 +18,7 @@ function Product() {
     PlaceholderImage,
   ]);
   const [attributes, setAttributes] = useState({});
-  const [quantity, setQuanity] = useState(0);
+  const [quantity, setQuanity] = useState(1);
   const [showTicker, setShowTicker] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -102,7 +102,7 @@ function Product() {
         </div>
         <div className="product__details__section">
           {Object.entries(attributes).map(([key, value], index) => (
-            <div className="product__details__section__container">
+            <div className="product__details__section__container" key={index}>
               <div>{key}:</div>
               <div>{value}</div>
             </div>

@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import {
-  createBrowserRouter,
+  createHashRouter,
   createRoutesFromElements,
   Route,
   RouterProvider,
@@ -14,10 +14,10 @@ import Product from "./pages/Product/Product.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
 import Register from "./pages/Register/Register.jsx";
 
-const router = createBrowserRouter(
+const router = createHashRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      <Route path="" element={<Dashboard />} />
+      <Route index element={<Dashboard />} />
       <Route path="login" element={<Login />} />
       <Route path="cart" element={<Cart />} />
       <Route path="product" element={<Product />}>
