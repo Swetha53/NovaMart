@@ -113,6 +113,19 @@ const updateCart = async (requestBody) => {
   }
 };
 
+const getCartDetails = async (userId) => {
+  try {
+    const response = await axios.get(`${CART_URL}?userId=${userId}`);
+    if (response.data && response.data.status == 200) {
+      return response.data;
+    } else {
+      throw response.message;
+    }
+  } catch (error) {
+    throw `Error updating cart: ${error}`;
+  }
+};
+
 export {
   checkLoginCredentials,
   registerUser,
@@ -122,4 +135,5 @@ export {
   fetchUserReviews,
   fetchUserOrders,
   updateCart,
+  getCartDetails,
 };
