@@ -23,10 +23,8 @@ const Cart = () => {
   const [showTicker, setShowTicker] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [subTotalAmount, setSubtotaAmount] = useState(0);
-  const [showModal, setShowModal] = useState(true);
-  const [modalDetails, setModalDetails] = useState({
-    heading: "Please select your Payment Method",
-  });
+  const [showModal, setShowModal] = useState(false);
+  const [modalDetails, setModalDetails] = useState({});
   const [paymentType, setPaymentType] = useState("Cash");
   const [visaNumber, setVisaNumber] = useState(0);
   const [visaValidation, setVisaValidation] = useState({
@@ -132,6 +130,9 @@ const Cart = () => {
   };
   const openPaymentModal = () => {
     setShowModal(true);
+    setModalDetails({
+      heading: "Please select your Payment Method",
+    });
   };
   const closePaymentModal = () => {
     setShowModal(false);
@@ -160,6 +161,7 @@ const Cart = () => {
       formValid = true;
     }
     if (formValid) {
+      setShowModal(false);
       sessionStorage.setItem(
         "paymentDetails",
         JSON.stringify({

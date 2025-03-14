@@ -10,6 +10,7 @@ function Header() {
   const avatar = sessionStorage.getItem("avatar")
 
   return (
+    // TODO search
     <div className="header">
       <NavLink to="">
         <img src={reverseLogo} alt="Nova Mart" className="header__logo" />

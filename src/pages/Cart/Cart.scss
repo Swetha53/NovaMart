@@ -25,6 +25,7 @@
     }
     &__text {
       font-weight: 600;
+      margin: 1rem 0;
     }
     &__input {
       margin: 1rem 0rem;
@@ -72,13 +73,13 @@
               font-weight: 500;
               font-size: 16px;
               &-grey {
-                color: c.$normal;
+                color: c.$normalColor;
               }
               &-red {
-                color: c.$error;
+                color: c.$errorColor;
               }
               &-orange {
-                color: c.$warning;
+                color: c.$warningColor;
               }
             }
             &__price {
