@@ -20,7 +20,7 @@ function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [age, setAge] = useState(0);
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState("F");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [avatar, setAvatar] = useState("");
@@ -169,7 +169,7 @@ function Register() {
       <h1>Register</h1>
       <div className="register__container">
         <div className="register__container__note">
-          Please Fill all the fields having * as they are mandetory fields.
+          Please fill all the fields having * as they are mandatory fields.
         </div>
         <div className="register__container__label">Email ID *</div>
         <Input
