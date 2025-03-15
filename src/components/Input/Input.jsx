@@ -12,8 +12,9 @@ function Input(props) {
     error,
     margin,
     minValue,
+    defaultValue,
   } = props;
-  const [inputValue, setInputValue] = useState(0);
+  const [inputValue, setInputValue] = useState(defaultValue ? defaultValue : 0);
 
   const onChangeEventHandler = (index) => {
     setInputValue(index);

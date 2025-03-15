@@ -23,10 +23,11 @@ const Cart = () => {
   const [showTicker, setShowTicker] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [subTotalAmount, setSubtotaAmount] = useState(0);
+  const [itemCount, setItemCount] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [modalDetails, setModalDetails] = useState({});
   const [paymentType, setPaymentType] = useState("Cash");
-  const [visaNumber, setVisaNumber] = useState(0);
+  const [visaNumber, setVisaNumber] = useState("");
   const [visaValidation, setVisaValidation] = useState({
     isValid: true,
     errorMessage: "",
@@ -56,16 +57,19 @@ const Cart = () => {
     try {
       const tempCart = await getCartDetails(userId);
       let tempSubTotal = 0;
+      let tempItemCount = 0;
       const tempCartItems = await Promise.all(
         tempCart.body[0].cartItemList.map(async (item) => {
           const tempPartialCartItem = await loadDetails(item.productId);
           tempSubTotal += item.totalPrice;
+          tempItemCount += item.quantity;
           return { ...tempPartialCartItem, ...item };
         })
       );
       setCart(tempCart.body[0]);
       setCartItems(tempCartItems);
       setSubtotaAmount(tempSubTotal);
+      setItemCount(tempItemCount);
     } catch (err) {
       toggleTicker(true, err.message);
     } finally {
@@ -283,8 +287,8 @@ const Cart = () => {
                         ? "Selling Fast"
                         : "In Stock"}
                     </div>
-                    <div className="cart__container__left__row__left__details__price">
-                      {item.currencyCode} {item.totalPrice}
+                    <div>
+                      {item.currencyCode} {item.unitPrice}
                     </div>
                   </div>
                   <Counter
@@ -294,6 +298,9 @@ const Cart = () => {
                       onCounterChange(value, item.productId);
                     }}
                   />
+                </div>
+                <div className="cart__container__left__row__total">
+                  {item.currencyCode} {item.totalPrice}
                 </div>
                 <img
                   onClick={() => {
@@ -310,8 +317,8 @@ const Cart = () => {
             <div className="cart__container__right__container">
               <div className="cart__container__right__container__row">
                 <div>
-                  Sub-Total Amount ({cartItems.length} Item
-                  {cartItems.length == 1 ? "" : "s"}):
+                  Sub-Total Amount ({itemCount} Item
+                  {itemCount == 1 ? "" : "s"}):
                 </div>
                 <div>
                   {cart.currencyCode} {subTotalAmount}
