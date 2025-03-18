@@ -14,6 +14,7 @@ import Product from "./pages/Product/Product.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
 import Register from "./pages/Register/Register.jsx";
 import Checkout from "./pages/Checkout/Checkout.jsx";
+import AR from "./pages/AR/AR.jsx";
 
 const router = createHashRouter(
   createRoutesFromElements(
@@ -28,6 +29,9 @@ const router = createHashRouter(
       <Route path="profile" element={<Profile />} />
       <Route path="register" element={<Register />}>
         <Route path=":userType" element={<Register />} />
+      </Route>
+      <Route path="model" element={<AR />}>
+        <Route path=":productId" element={<AR />} />
       </Route>
     </Route>
   )

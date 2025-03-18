@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { fetchProductDetails, updateCart } from "../../config/api";
 import "./Product.scss";
@@ -23,6 +23,7 @@ function Product() {
   const [quantity, setQuanity] = useState(1);
   const [showTicker, setShowTicker] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   const toggleTicker = (value, message) => {
     setShowTicker(value);
@@ -30,7 +31,7 @@ function Product() {
   };
 
   const onClickHandler = () => {
-    console.log("AR Implementation");
+    navigate("/model/" + productId);
   };
 
   const onCounterChange = (value) => {

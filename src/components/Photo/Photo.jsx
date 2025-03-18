@@ -98,7 +98,7 @@ function Photo(props) {
         </div>
         <div className="photo__footer__review">
           Reviewed by {details.reviews.length} customer
-          {details.reviews.length == 1 ? "s" : ""}
+          {details.reviews.length == 1 ? "" : "s"}
         </div>
       </div>
     </div>
