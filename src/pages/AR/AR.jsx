@@ -21,6 +21,9 @@ const AR = () => {
         toggleTicker(true, err.message);
       } finally {
         // setLoading(false);
+        setModelUrl(
+          "https://reggvbnnkqmprlkojomx.supabase.co/storage/v1/object/public/Products//8989f64c-0ddc-4416-94f4-cd7cadc32131.glb"
+        );
       }
     };
     loadProductModel();
