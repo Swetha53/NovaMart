@@ -13,11 +13,14 @@ const AR = () => {
         className="ar__model"
         id="product-demo"
         ar
-        ar-modes="webxr scene-viewer"
+        ar-modes="webxr scene-viewer quick-look"
         camera-controls
+        touch-action="pan-y"
+        max-camera-orbit="auto 90deg auto"
         src={modelUrl}
         alt="Product"
-      ></model-viewer>
+      >
+      </model-viewer>
     </div>
   );
 };
