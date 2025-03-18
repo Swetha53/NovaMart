@@ -6,7 +6,7 @@ import "@google/model-viewer";
 const AR = () => {
   const { productId } = useParams();
   const modelUrl =
-    "https://reggvbnnkqmprlkojomx.supabase.co/storage/v1/object/public/Products//8989f64c-0ddc-4416-94f4-cd7cadc32131.glb";
+    "https://reggvbnnkqmprlkojomx.supabase.co/storage/v1/object/public/Products//object.usdz";
   return (
     <div className="ar">
       <model-viewer
