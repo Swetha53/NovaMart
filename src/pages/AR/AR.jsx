@@ -20,6 +20,9 @@ const AR = () => {
         src={modelUrl}
         alt="Product"
       >
+        <button slot="ar-button" id="ar-button">
+          View in your space
+        </button>
       </model-viewer>
     </div>
   );
