@@ -1,10 +1,11 @@
 import axios from "axios";
 
-const PRODUCT_URL = "http://localhost:8090/api/products";
-const USER_URL = "http://localhost:8095/api/users";
-const REVIEW_URL = "http://localhost:8090/api/reviews";
-const ORDER_URL = "http://localhost:8091/api/orders";
-const CART_URL = "http://localhost:8092/api/cart";
+const PRODUCT_URL = "http://192.168.2.108:8090/api/products";
+const USER_URL = "http://192.168.2.108:8095/api/users";
+const REVIEW_URL = "http://192.168.2.108:8090/api/reviews";
+const ORDER_URL = "http://192.168.2.108:8091/api/orders";
+const CART_URL = "http://192.168.2.108:8092/api/cart";
+const REALITY_URL = "http://192.168.2.108:8001/reality";
 
 const checkLoginCredentials = async (email, password) => {
   try {
@@ -154,6 +155,19 @@ const removeItemFromCart = async (userId, productId) => {
   }
 };
 
+const fetchProductModel = async (productId) => {
+  try {
+    const response = await axios.get(`${REALITY_URL}/${productId}`);
+    if (response && response.data) {
+      return response.data;
+    } else {
+      throw response;
+    }
+  } catch (error) {
+    throw `Error fetching product model : ${error}`;
+  }
+};
+
 export {
   checkLoginCredentials,
   registerUser,
@@ -166,4 +180,5 @@ export {
   updateCart,
   getCartDetails,
   removeItemFromCart,
+  fetchProductModel,
 };

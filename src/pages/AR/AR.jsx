@@ -1,16 +1,47 @@
 import { useParams } from "react-router-dom";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./AR.scss";
 import "@google/model-viewer";
+import { fetchProductModel } from "../../config/api";
+import Ticker from "../../components/Ticker/Ticker";
 
 const AR = () => {
   const { productId } = useParams();
-  const modelUrl =
-    "https://reggvbnnkqmprlkojomx.supabase.co/storage/v1/object/public/Products//8989f64c-0ddc-4416-94f4-cd7cadc32131.glb";
-  const iosModel =
-    "https://reggvbnnkqmprlkojomx.supabase.co/storage/v1/object/public/Products//object.usdz";
+  const [modelUrl, setModelUrl] = useState("");
+  const [showTicker, setShowTicker] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    const loadProductModel = async () => {
+      try {
+        const tempModelData = await fetchProductModel(productId);
+        tempModelData.data[0].asset_url.replace(/(\.glb).*$/, ".glb");
+        setModelUrl(tempModelData.data[0].asset_url);
+      } catch (err) {
+        toggleTicker(true, err.message);
+      } finally {
+        // setLoading(false);
+      }
+    };
+    loadProductModel();
+  }, []);
+
+  const toggleTicker = (value, message) => {
+    setShowTicker(value);
+    setErrorMessage(message);
+  };
+
   return (
     <div className="ar">
+      {showTicker && (
+        <Ticker
+          type="error"
+          message={errorMessage}
+          closeTickerHandler={() => {
+            toggleTicker(false, "");
+          }}
+        />
+      )}
       <model-viewer
         className="ar__model"
         id="product-demo"
@@ -21,7 +52,6 @@ const AR = () => {
         touch-action="pan-y"
         max-camera-orbit="auto 90deg auto"
         src={modelUrl}
-        ios-src={iosModel}
         xr-environment
         alt="Product"
       >
