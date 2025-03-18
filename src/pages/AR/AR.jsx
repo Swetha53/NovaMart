@@ -4,12 +4,14 @@ import "./AR.scss";
 import "@google/model-viewer";
 import { fetchProductModel } from "../../config/api";
 import Ticker from "../../components/Ticker/Ticker";
+import Button from "../../components/Button/Button";
 
 const AR = () => {
   const { productId } = useParams();
   const [modelUrl, setModelUrl] = useState("");
   const [showTicker, setShowTicker] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
     const loadProductModel = async () => {
@@ -21,9 +23,10 @@ const AR = () => {
         toggleTicker(true, err.message);
       } finally {
         // setLoading(false);
-        setModelUrl(
-          "https://reggvbnnkqmprlkojomx.supabase.co/storage/v1/object/public/Products//8989f64c-0ddc-4416-94f4-cd7cadc32131.glb"
-        );
+        setModelUrl([
+          "https://reggvbnnkqmprlkojomx.supabase.co/storage/v1/object/public/Products//little_cartoon_dog.glb",
+          "https://reggvbnnkqmprlkojomx.supabase.co/storage/v1/object/public/Products//8989f64c-0ddc-4416-94f4-cd7cadc32131.glb",
+        ]);
       }
     };
     loadProductModel();
@@ -45,16 +48,33 @@ const AR = () => {
           }}
         />
       )}
+      <Button
+        text="Dog"
+        onClickHandler={() => {
+          setIndex(0);
+        }}
+        width="50%"
+        margin="0rem"
+        height="1.5rem"
+      />
+      <Button
+        text="Product"
+        onClickHandler={() => {
+          setIndex(1);
+        }}
+        width="50%"
+        margin="0rem"
+        height="1.5rem"
+      />
       <model-viewer
         className="ar__model"
         id="product-demo"
         ar
-        ar-scale="fixed"
         ar-modes="webxr scene-viewer quick-look"
         camera-controls
         touch-action="pan-y"
         max-camera-orbit="auto 90deg auto"
-        src={modelUrl}
+        src={modelUrl[index]}
         xr-environment
         alt="Product"
       >
