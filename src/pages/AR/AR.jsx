@@ -37,7 +37,7 @@ const AR = () => {
 
   return (
     <div className="ar">
-      {showTicker && (
+      {/* {showTicker && (
         <Ticker
           type="error"
           message={errorMessage}
@@ -45,7 +45,7 @@ const AR = () => {
             toggleTicker(false, "");
           }}
         />
-      )}
+      )} */}
       <model-viewer
         className="ar__model"
         id="product-demo"
@@ -59,10 +59,7 @@ const AR = () => {
         xr-environment
         alt="Product"
       >
-        <button
-          slot="ar-button"
-          id="ar-button"
-        >
+        <button slot="ar-button" id="ar-button">
           👋 Activate AR
         </button>
       </model-viewer>

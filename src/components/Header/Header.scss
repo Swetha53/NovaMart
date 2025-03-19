@@ -33,3 +33,25 @@
     height: 40px;
   }
 }
+@media (max-width: 720px) {
+  .header {
+    &__logo {
+      height: 35px;
+    }
+    &__search {
+      width: 60%;
+    }
+    &__profile {
+      &__image {
+        height: 25px;
+        margin-right: 0.1rem;
+      }
+      a {
+        padding-left: 0.1rem;
+      }
+    }
+    &__img {
+      height: 25px;
+    }
+  }
+}

@@ -36,3 +36,12 @@
     transform: perspective(200rem) rotateY(360deg);
   }
 }
+
+@media (max-width: 720px) {
+  .image-block {
+    width: 40vw;
+    span {
+      transform: rotateY(calc(var(--i) * calc(360deg/var(--degree)))) translateZ(35vw);
+    }
+  }
+}

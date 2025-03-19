@@ -14,11 +14,20 @@
       color: c.$normalColor;
       opacity: 0.6;
       font-size: 2rem;
+      text-align: center;
     }
   }
   &__products {
     display: flex;
     justify-content: space-around;
+    flex-wrap: wrap;
     padding: 1rem 0;
+  }
+}
+@media (max-width: 720px) {
+  .dashboard__carousel {
+    h1 {
+      font-size: 1.5rem;
+    }
   }
 }
