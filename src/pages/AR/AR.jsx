@@ -11,7 +11,6 @@ const AR = () => {
   const [modelUrl, setModelUrl] = useState("");
   const [showTicker, setShowTicker] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [index, setIndex] = useState(0);
 
   useEffect(() => {
     const loadProductModel = async () => {
@@ -23,10 +22,9 @@ const AR = () => {
         toggleTicker(true, err.message);
       } finally {
         // setLoading(false);
-        setModelUrl([
-          "https://reggvbnnkqmprlkojomx.supabase.co/storage/v1/object/public/Products//little_cartoon_dog.glb",
-          "https://reggvbnnkqmprlkojomx.supabase.co/storage/v1/object/public/Products//8989f64c-0ddc-4416-94f4-cd7cadc32131.glb",
-        ]);
+        setModelUrl(
+          "https://reggvbnnkqmprlkojomx.supabase.co/storage/v1/object/public/Products//8989f64c-0ddc-4416-94f4-cd7cadc32131.glb"
+        );
       }
     };
     loadProductModel();
@@ -48,38 +46,25 @@ const AR = () => {
           }}
         />
       )}
-      <Button
-        text="Dog"
-        onClickHandler={() => {
-          setIndex(0);
-        }}
-        width="50%"
-        margin="0rem"
-        height="1.5rem"
-      />
-      <Button
-        text="Product"
-        onClickHandler={() => {
-          setIndex(1);
-        }}
-        width="50%"
-        margin="0rem"
-        height="1.5rem"
-      />
       <model-viewer
         className="ar__model"
         id="product-demo"
         ar
         ar-modes="webxr scene-viewer quick-look"
+        ar-scale="fixed"
         camera-controls
         touch-action="pan-y"
         max-camera-orbit="auto 90deg auto"
-        src={modelUrl[index]}
+        src={modelUrl}
         xr-environment
         alt="Product"
       >
-        <button slot="ar-button" id="ar-button">
-          View in your space
+        <button
+          slot="ar-button"
+          id="ar-button"
+          style="background-color: white; border-radius: 4px; border: none; position: absolute; bottom: 16px; right: 16px; "
+        >
+          👋 Activate AR
         </button>
       </model-viewer>
     </div>

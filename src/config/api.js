@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const PRODUCT_URL = "http://localhost:8090/api/products";
-const USER_URL = "http://localhost:8095/api/users";
-const REVIEW_URL = "http://localhost:8090/api/reviews";
-const ORDER_URL = "http://localhost:8091/api/orders";
-const CART_URL = "http://localhost:8092/api/cart";
-const REALITY_URL = "http://localhost:8001/reality";
+const PRODUCT_URL = "https://192.168.2.108:8080/api/products";
+const USER_URL = "https://192.168.2.108:8085/api/users";
+const REVIEW_URL = "https://192.168.2.108:8080/api/reviews";
+const ORDER_URL = "https://192.168.2.108:8081/api/orders";
+const CART_URL = "https://192.168.2.108:8082/api/cart";
+const REALITY_URL = "https://192.168.2.108:8000/reality";
 
 const checkLoginCredentials = async (email, password) => {
   try {
