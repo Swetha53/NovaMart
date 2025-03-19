@@ -22,9 +22,6 @@ const AR = () => {
         toggleTicker(true, err.message);
       } finally {
         // setLoading(false);
-        setModelUrl(
-          "https://reggvbnnkqmprlkojomx.supabase.co/storage/v1/object/public/Products//8989f64c-0ddc-4416-94f4-cd7cadc32131.glb"
-        );
       }
     };
     loadProductModel();
@@ -37,7 +34,7 @@ const AR = () => {
 
   return (
     <div className="ar">
-      {/* {showTicker && (
+      {showTicker && (
         <Ticker
           type="error"
           message={errorMessage}
@@ -45,7 +42,7 @@ const AR = () => {
             toggleTicker(false, "");
           }}
         />
-      )} */}
+      )}
       <model-viewer
         className="ar__model"
         id="product-demo"

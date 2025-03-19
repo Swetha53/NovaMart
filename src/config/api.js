@@ -5,7 +5,7 @@ const USER_URL = "https://192.168.2.108:8085/api/users";
 const REVIEW_URL = "https://192.168.2.108:8080/api/reviews";
 const ORDER_URL = "https://192.168.2.108:8081/api/orders";
 const CART_URL = "https://192.168.2.108:8082/api/cart";
-const REALITY_URL = "https://192.168.2.108:8000/reality";
+const REALITY_URL = "https://192.168.2.108:8443/reality";
 
 const checkLoginCredentials = async (email, password) => {
   try {
