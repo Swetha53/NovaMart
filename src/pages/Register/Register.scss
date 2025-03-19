@@ -33,3 +33,27 @@
     }
   }
 }
+@media (max-width: 720px) {
+  .register {
+    img {
+      height: 7vh;
+    }
+    h1 {
+      margin: 0.25rem 0;
+    }
+    &__container {
+      width: 90%;
+      padding: 0.5rem;
+      &__note {
+        padding-bottom: 0.25rem;
+      }
+      &__row {
+        flex-wrap: wrap;
+        &__label {
+          width: 35%;
+          padding-bottom: 0.5rem;
+        }
+      }
+    }
+  }
+}

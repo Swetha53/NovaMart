@@ -222,7 +222,7 @@ function Register() {
           }}
         />
         <div className="register__container__row">
-          <div>Age *</div>
+          <div className="register__container__row__label">Age *</div>
           <Input
             inputType="number"
             error={formValidations["age"]}
@@ -234,7 +234,7 @@ function Register() {
               validateInput(value, "age");
             }}
           />
-          <div>Gender *</div>
+          <div className="register__container__row__label">Gender *</div>
           <Input
             inputType="radio"
             name="Gender"
