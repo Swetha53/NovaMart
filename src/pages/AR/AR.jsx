@@ -62,7 +62,6 @@ const AR = () => {
         <button
           slot="ar-button"
           id="ar-button"
-          style="background-color: white; border-radius: 4px; border: none; position: absolute; bottom: 16px; right: 16px; "
         >
           👋 Activate AR
         </button>
