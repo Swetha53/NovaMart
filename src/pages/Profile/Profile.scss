@@ -79,6 +79,15 @@
           padding: 0.5rem 0rem;
           font-size: 1rem;
         }
+        .firstname {
+          grid-area: firstname;
+        }
+        .lastname {
+          grid-area: lastname;
+        }
+        .address {
+          grid-area: address;
+        }
         .email {
           grid-area: email;
         }
@@ -88,11 +97,17 @@
         background-color: c.$secondary;
         padding: 0.5rem;
         border-radius: 8px;
+        &__body {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+        }
         &__container {
           background-color: c.$primary;
           padding: 0.5rem;
           border-radius: 8px;
           width: 25%;
+          margin-right: 0.25rem;
           &__rating img {
             height: 0.75rem;
             padding-bottom: 0.5rem;
@@ -117,6 +132,53 @@
             width: 1.5rem;
             padding-top: 0.5rem;
             aspect-ratio: 1/1;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 720px) {
+  .profile {
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    &__image {
+      width: 90%;
+      margin: 0.25rem 0;
+      img {
+        width: 12vw;
+        aspect-ratio: 1/1;
+        margin: 0.25rem;
+      }
+      div {
+        border-radius: 8px;
+        img {
+          border-radius: 8px;
+        }
+      }
+    }
+    &__tabs {
+      width: 100%;
+      &__main {
+        width: calc(100% - 0.5rem);
+        padding: 0.25rem;
+        &__info {
+          .firstname,
+          .lastname,
+          .age,
+          .gender,
+          .email,
+          .address {
+            padding: 0.25rem 0rem;
+            font-size: 0.75rem;
+          }
+        }
+        &__reviews {
+          &__container {
+            width: 100%;
+            margin-bottom: 0.25rem;
           }
         }
       }

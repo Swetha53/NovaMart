@@ -6,8 +6,8 @@ import profile from "./../../assets/profile.svg";
 import Search from "./../Search/Search";
 
 function Header() {
-  const userName = sessionStorage.getItem("userName")
-  const avatar = sessionStorage.getItem("avatar")
+  const userName = sessionStorage.getItem("userName");
+  const avatar = sessionStorage.getItem("avatar");
 
   return (
     // TODO search
@@ -26,10 +26,14 @@ function Header() {
             className="header__profile__image"
           />
         ) : (
-          <img src={profile} alt="Profile Image" className="header__profile__image" />
+          <img
+            src={profile}
+            alt="Profile Image"
+            className="header__profile__image"
+          />
         )}
         {userName ? (
-          <p>Hi, {userName}</p>
+          <NavLink to="profile">Hi, {userName}</NavLink>
         ) : (
           <NavLink to="login">Log In</NavLink>
         )}

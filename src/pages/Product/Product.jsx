@@ -7,8 +7,9 @@ import Button from "../../components/Button/Button";
 import Counter from "../../components/Counter/Counter";
 import PlaceholderImage from "./../../assets/placeholder.jpg";
 import Ticker from "../../components/Ticker/Ticker";
-
-// TODO add reviews of the product
+import FilledStar from "./../../assets/fill_star.png";
+import Star from "./../../assets/star.png";
+import Image from "./../../assets/image.png";
 
 function Product() {
   const { productId } = useParams();
@@ -29,13 +30,14 @@ function Product() {
     setShowTicker(value);
     setErrorMessage(message);
   };
-
   const onClickHandler = () => {
     navigate("/model/" + productId);
   };
-
   const onCounterChange = (value) => {
     setQuanity(value);
+  };
+  const openReviewModal = () => {
+    // TODO
   };
 
   const addToCart = async () => {
@@ -87,42 +89,105 @@ function Product() {
           }}
         />
       )}
-      <div className="product__images">
-        <ImageBlock productImages={selectedImages} />
-        <Button text="View in AR" onClickHandler={onClickHandler} />
-      </div>
-      <div className="product__details">
-        <h1>{productDetails.name}</h1>
-        <h3>
-          {productDetails.currencyCode} {productDetails.price}
-        </h3>
-        <div className="product__details__section">
-          Quantity:
-          <Counter
-            maxQuantity={productDetails.quantityAvailable}
-            onChangeEventHandler={onCounterChange}
+      <div className="product__container">
+        <div className="product__container__images">
+          <ImageBlock productImages={selectedImages} />
+          <Button text="View in AR" onClickHandler={onClickHandler} />
+        </div>
+        <div className="product__container__details">
+          <h1>{productDetails.name}</h1>
+          <h3>
+            {productDetails.currencyCode} {productDetails.price}
+          </h3>
+          <div className="product__container__details__section">
+            Quantity:
+            <Counter
+              maxQuantity={productDetails.quantityAvailable}
+              onChangeEventHandler={onCounterChange}
+            />
+          </div>
+          <div className="product__container__details__section">
+            {Object.entries(attributes).map(([key, value], index) => (
+              <div
+                className="product__container__details__section__container"
+                key={index}
+              >
+                <div>{key}:</div>
+                <div>{value}</div>
+              </div>
+            ))}
+          </div>
+          <div className="product__container__details__section">
+            Description:
+            <div className="product__container__details__section__text">
+              {productDetails.description}
+            </div>
+          </div>
+          <Button
+            text="Add to Cart"
+            onClickHandler={addToCart}
+            width="50%"
+            margin="0.5rem 0rem"
           />
         </div>
-        <div className="product__details__section">
-          {Object.entries(attributes).map(([key, value], index) => (
-            <div className="product__details__section__container" key={index}>
-              <div>{key}:</div>
-              <div>{value}</div>
-            </div>
-          ))}
+      </div>
+      <div className="product__reviews">
+        <div className="product__reviews__header">
+          <h3>Product Reviews</h3>
+          <Button
+            text="Add Review"
+            reverse={true}
+            width="10%"
+            margin="0"
+            height="1.5rem"
+            onClickHandler={openReviewModal}
+          />
         </div>
-        <div className="product__details__section">
-          Description:
-          <div className="product__details__section__text">
-            {productDetails.description}
-          </div>
+        <div className="product__reviews__container">
+          {productDetails &&
+            productDetails.reviews &&
+            productDetails.reviews.map((review, index) => (
+              <div key={index} className="product__reviews__container__review">
+                <div className="product__reviews__container__review__rating">
+                  {Array.from({ length: review.rating }, (_, i) => i + 1).map(
+                    (num) => (
+                      <img
+                        src={FilledStar}
+                        alt="Filled Star"
+                        key={"fill-" + num}
+                      />
+                    )
+                  )}
+                  {Array.from(
+                    { length: 5 - review.rating },
+                    (_, i) => i + 1
+                  ).map((num) => (
+                    <img
+                      src={Star}
+                      alt="Unfilled Star"
+                      key={"unfilled-" + num}
+                    />
+                  ))}
+                </div>
+                <div className="product__reviews__container__review__title">
+                  {review.title}
+                </div>
+                <div>{review.comment}</div>
+                {review.imageUrl && review.imageUrl.length > 0 ? (
+                  <img
+                    src={review.imageurl[0]}
+                    className="product__reviews__container__review__footer"
+                  />
+                ) : (
+                  <img
+                    src={Image}
+                    alt="Image"
+                    className="product__reviews__container__review__footer"
+                  />
+                )}
+              </div>
+            ))}
         </div>
-        <Button
-          text="Add to Cart"
-          onClickHandler={addToCart}
-          width="50%"
-          margin="0.5rem 0rem"
-        />
       </div>
     </div>
   );

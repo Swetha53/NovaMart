@@ -3,10 +3,8 @@ import Button from "./../Button/Button";
 import Image from "./../../assets/image.png";
 
 function OrderTable(props) {
-  const getProductSupport = () => {
-    console.log("Get Product Support");
-  };
   const writeProductReview = () => {
+    // TODO
     console.log("Write Product Review");
   };
 
@@ -23,14 +21,6 @@ function OrderTable(props) {
           <span className="header3">Ship To</span>
           <span className="address">{props.name}</span>
         </div>
-        <Button
-          text="Get Product Support"
-          onClickHandler={getProductSupport}
-          width="20%"
-          margin="0rem"
-          height="1.5rem"
-          reverse={true}
-        />
         <div className="order__header__right">
           <span className="orderid">Order #{props.order.orderId}</span>
           <a className="orderdetail">View Order Detail</a>

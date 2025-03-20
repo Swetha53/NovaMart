@@ -125,7 +125,7 @@ function Profile() {
               : "profile__tabs__tab-disabled profile__tabs__tab profile__tabs__wishlist"
           }
         >
-          Wishlist [Coming Soon!!]
+          Wishlist
         </div>
         <div className="profile__tabs__main">
           {activeTab == 0 && (
@@ -144,54 +144,56 @@ function Profile() {
               </div>
               <div className="profile__tabs__main__reviews">
                 <h3>Your Reviews</h3>
-                {reviews.map((review, index) => (
-                  <div
-                    className="profile__tabs__main__reviews__container"
-                    key={index}
-                  >
-                    <div className="profile__tabs__main__reviews__container__rating">
-                      {Array.from(
-                        { length: review.rating },
-                        (_, i) => i + 1
-                      ).map((num) => (
-                        <img
-                          src={FilledStar}
-                          alt="Filled Star"
-                          key={"fill-" + num}
-                        />
-                      ))}
-                      {Array.from(
-                        { length: 5 - review.rating },
-                        (_, i) => i + 1
-                      ).map((num) => (
-                        <img
-                          src={Star}
-                          alt="Unfilled Star"
-                          key={"unfilled-" + num}
-                        />
-                      ))}
+                <div className="profile__tabs__main__reviews__body">
+                  {reviews.map((review, index) => (
+                    <div
+                      className="profile__tabs__main__reviews__container"
+                      key={index}
+                    >
+                      <div className="profile__tabs__main__reviews__container__rating">
+                        {Array.from(
+                          { length: review.rating },
+                          (_, i) => i + 1
+                        ).map((num) => (
+                          <img
+                            src={FilledStar}
+                            alt="Filled Star"
+                            key={"fill-" + num}
+                          />
+                        ))}
+                        {Array.from(
+                          { length: 5 - review.rating },
+                          (_, i) => i + 1
+                        ).map((num) => (
+                          <img
+                            src={Star}
+                            alt="Unfilled Star"
+                            key={"unfilled-" + num}
+                          />
+                        ))}
+                      </div>
+                      <div className="profile__tabs__main__reviews__container__title">
+                        {review.title}
+                      </div>
+                      <div>{review.comment}</div>
+                      <div className="profile__tabs__main__reviews__container__footer">
+                        {review.imageUrl && review.imageUrl.length > 0 ? (
+                          <img
+                            src={review.imageurl[0]}
+                            className="profile__tabs__main__reviews__container__image"
+                          />
+                        ) : (
+                          <img
+                            src={Image}
+                            alt="Image"
+                            className="profile__tabs__main__reviews__container__image"
+                          />
+                        )}
+                        <a href={"/product/" + review.productId}>See Product</a>
+                      </div>
                     </div>
-                    <div className="profile__tabs__main__reviews__container__title">
-                      {review.title}
-                    </div>
-                    <div>{review.comment}</div>
-                    <div className="profile__tabs__main__reviews__container__footer">
-                      {review.imageUrl && review.imageUrl.length > 0 ? (
-                        <img
-                          src={review.imageurl[0]}
-                          className="profile__tabs__main__reviews__container__image"
-                        />
-                      ) : (
-                        <img
-                          src={Image}
-                          alt="Image"
-                          className="profile__tabs__main__reviews__container__image"
-                        />
-                      )}
-                      <a href={"/product/" + review.productId}>See Product</a>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </>
           )}
