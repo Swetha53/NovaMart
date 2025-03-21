@@ -13,6 +13,7 @@ function Input(props) {
     margin,
     minValue,
     defaultValue,
+    height,
   } = props;
   const [inputValue, setInputValue] = useState(defaultValue ? defaultValue : 0);
 
@@ -22,27 +23,7 @@ function Input(props) {
   };
   return (
     <>
-      {inputType !== "radio" && (
-        <div
-          className={`${reverse ? "input input-reverse" : "input"} ${
-            error && !error.isValid ? "input-error" : ""
-          }`}
-          style={{ "--width": width, "--margin": margin }}
-        >
-          <input
-            type={inputType}
-            placeholder={placeholder}
-            min={minValue}
-            onChange={(event) => {
-              onChangeHandler(event.target.value);
-            }}
-          />
-          {error && !error.isValid && (
-            <div className="input-error__label">{error.errorMessage}</div>
-          )}
-        </div>
-      )}
-      {inputType == "radio" && (
+      {inputType == "radio" ? (
         <div className="input__radio">
           {placeholder.map((text, idx) => (
             <span key={idx} className="input__radio__container">
@@ -62,6 +43,42 @@ function Input(props) {
               <br />
             </span>
           ))}
+        </div>
+      ) : inputType == "textarea" ? (
+        <div
+          className={`${reverse ? "input input-reverse" : "input"} ${
+            error && !error.isValid ? "input-error" : ""
+          }`}
+          style={{ "--width": width, "--margin": margin, "--height": height }}
+        >
+          <textarea
+            placeholder={placeholder}
+            onChange={(event) => {
+              onChangeHandler(event.target.value);
+            }}
+          ></textarea>
+          {error && !error.isValid && (
+            <div className="input-error__label">{error.errorMessage}</div>
+          )}
+        </div>
+      ) : (
+        <div
+          className={`${reverse ? "input input-reverse" : "input"} ${
+            error && !error.isValid ? "input-error" : ""
+          }`}
+          style={{ "--width": width, "--margin": margin, "--height": height }}
+        >
+          <input
+            type={inputType}
+            placeholder={placeholder}
+            min={minValue}
+            onChange={(event) => {
+              onChangeHandler(event.target.value);
+            }}
+          />
+          {error && !error.isValid && (
+            <div className="input-error__label">{error.errorMessage}</div>
+          )}
         </div>
       )}
     </>

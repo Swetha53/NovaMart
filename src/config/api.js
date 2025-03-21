@@ -1,11 +1,14 @@
 import axios from "axios";
 
-const PRODUCT_URL = "https://192.168.2.108:8080/api/products";
-const USER_URL = "https://192.168.2.108:8085/api/users";
-const REVIEW_URL = "https://192.168.2.108:8080/api/reviews";
-const ORDER_URL = "https://192.168.2.108:8081/api/orders";
-const CART_URL = "https://192.168.2.108:8082/api/cart";
-const REALITY_URL = "https://192.168.2.108:8443/reality";
+const IP_ADDRESS = "192.168.2.108";
+// 192.168.2.108
+// 10.200.67.24
+const PRODUCT_URL = `https://${IP_ADDRESS}:8080/api/products`;
+const USER_URL = `https://${IP_ADDRESS}:8085/api/users`;
+const REVIEW_URL = `https://${IP_ADDRESS}:8080/api/reviews`;
+const ORDER_URL = `https://${IP_ADDRESS}:8081/api/orders`;
+const CART_URL = `https://${IP_ADDRESS}:8082/api/cart`;
+const REALITY_URL = `https://${IP_ADDRESS}:8443/reality`;
 
 const checkLoginCredentials = async (email, password) => {
   try {
@@ -72,6 +75,19 @@ const fetchUserDetails = async (userId) => {
     }
   } catch (error) {
     throw `Error fetching user details: ${error}`;
+  }
+};
+
+const addProductReview = async (requestBody) => {
+  try {
+    const response = await axios.post(`${REVIEW_URL}/add`, requestBody);
+    if (response.data && response.data.status == 200) {
+      return response.data;
+    } else {
+      throw response.message;
+    }
+  } catch (error) {
+    throw `Error adding product review: ${error}`;
   }
 };
 
@@ -174,6 +190,7 @@ export {
   fetchAllProducts,
   fetchProductDetails,
   fetchUserDetails,
+  addProductReview,
   fetchUserReviews,
   fetchUserOrders,
   placeUserOrder,

@@ -36,9 +36,6 @@ function Product() {
   const onCounterChange = (value) => {
     setQuanity(value);
   };
-  const openReviewModal = () => {
-    // TODO
-  };
 
   const addToCart = async () => {
     const requestBody = {
@@ -134,14 +131,6 @@ function Product() {
       <div className="product__reviews">
         <div className="product__reviews__header">
           <h3>Product Reviews</h3>
-          <Button
-            text="Add Review"
-            reverse={true}
-            width="10%"
-            margin="0"
-            height="1.5rem"
-            onClickHandler={openReviewModal}
-          />
         </div>
         <div className="product__reviews__container">
           {productDetails &&

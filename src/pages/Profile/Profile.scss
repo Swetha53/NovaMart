@@ -4,6 +4,26 @@
   display: flex;
   justify-content: space-around;
   margin: 1rem 0rem;
+  .modal-container {
+    &__rows {
+      display: flex;
+      flex-direction: column;
+      margin: 1rem 0;
+    }
+    &__rating {
+      display: flex;
+      width: 50%;
+      justify-content: space-between;
+    }
+    &__star {
+      height: 4vh;
+      aspect-ratio: 1/1;
+    }
+  }
+  &-disable__scroll {
+    height: 100%;
+    overflow-y: hidden;
+  }
   &__image {
     width: 10%;
     img {

@@ -3,9 +3,11 @@
 .input {
   width: var(--width, calc(100% - 1rem));
   margin: var(--margin, 0.25rem 0rem);
+  height: var(--height, 1.25rem);
   position: relative;
   input:not([type="radio"]) {
-    width: 100%;
+    width: calc(100% - 0.5rem);
+    height: calc(100% - (2 * var(--margin, 0.25rem)));
     background-color: c.$primary;
     outline: none;
     border: 1px solid c.$secondary;
@@ -13,14 +15,34 @@
     color: c.$tertiary;
     border-radius: 4px;
   }
+  textarea {
+    width: calc(100% - 0.5rem);
+    height: calc(100% - (2 * var(--margin, 0.25rem)));
+    background-color: c.$primary;
+    outline: none;
+    border: 1px solid c.$secondary;
+    padding: 0.25rem;
+    color: c.$tertiary;
+    border-radius: 4px;
+    font-size: inherit;
+    font-family: inherit;
+  }
   &-reverse {
     input:not([type="radio"]) {
+      background-color: c.$secondary;
+      border: 1px solid c.$primary;
+    }
+    textarea {
       background-color: c.$secondary;
       border: 1px solid c.$primary;
     }
   }
   &-error {
     input:not([type="radio"]) {
+      background-color: c.$error;
+      border: 1px solid c.$errorBorder;
+    }
+    textarea {
       background-color: c.$error;
       border: 1px solid c.$errorBorder;
     }
