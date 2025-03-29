@@ -83,7 +83,6 @@ const Checkout = () => {
       currencyCode: request.currencyCode,
     };
     try {
-      // TODO set cart quantity in session storage so that cart icon can display that
       await updateCart(requestBody);
     } catch (err) {
       toggleTicker(true, err.message);
@@ -126,7 +125,6 @@ const Checkout = () => {
       requestBody.orderItemList.push(itemRequest);
     });
     try {
-      // TODO set cart quantity in session storage so that cart icon can display that
       await placeUserOrder(requestBody);
     } catch (err) {
       toggleTicker(true, err.message);

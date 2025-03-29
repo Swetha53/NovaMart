@@ -351,7 +351,7 @@ function Profile() {
                             className="profile__tabs__main__reviews__container__image"
                           />
                         )}
-                        <a href={"/product/" + review.productId}>See Product</a>
+                        <a href={"#/product/" + review.productId}>See Product</a>
                       </div>
                     </div>
                   ))}

@@ -1,10 +1,13 @@
 import "./Dashboard.scss";
+import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { fetchAllProducts } from "../../config/api";
+import { fetchAllProducts, fetchSearchedProducts } from "../../config/api";
 import Photo from "../../components/Photo/Photo";
 import Ticker from "../../components/Ticker/Ticker";
 
 const Dashboard = () => {
+  const location = useLocation();
+  const data = location.state;
   const [products, setProducts] = useState([]);
   const [showTicker, setShowTicker] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -26,8 +29,22 @@ const Dashboard = () => {
       }
     };
 
-    loadProducts();
-  }, []);
+    const loadSearchedProducts = async () => {
+      try {
+        const tempProducts = await fetchSearchedProducts(data.keyword);
+        setProducts(tempProducts.body);
+      } catch (err) {
+        toggleTicker(true, err.message);
+      } finally {
+        // setLoading(false);
+      }
+    };
+    if (data && data.keyword) {
+      loadSearchedProducts();
+    } else {
+      loadProducts();
+    }
+  }, [data]);
   return (
     <div className="dashboard">
       {showTicker && (

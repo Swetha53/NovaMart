@@ -126,8 +126,10 @@
           background-color: c.$primary;
           padding: 0.5rem;
           border-radius: 8px;
-          width: 25%;
+          width: 30%;
+          height: 16vh;
           margin-right: 0.25rem;
+          margin-bottom: 0.25rem;
           &__rating img {
             height: 0.75rem;
             padding-bottom: 0.5rem;
@@ -198,6 +200,7 @@
         &__reviews {
           &__container {
             width: 100%;
+            height: 18vh;
             margin-bottom: 0.25rem;
           }
         }

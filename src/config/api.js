@@ -52,6 +52,19 @@ const fetchAllProducts = async () => {
   }
 };
 
+const fetchSearchedProducts = async (name) => {
+  try {
+    const response = await axios.get(`${PRODUCT_URL}/search?name=${name}`);
+    if (response.data && response.data.status == 200) {
+      return response.data;
+    } else {
+      throw response.message;
+    }
+  } catch (error) {
+    throw `Error fetching product details: ${error}`;
+  }
+};
+
 const fetchProductDetails = async (productId) => {
   try {
     const response = await axios.get(`${PRODUCT_URL}?productId=${productId}`);
@@ -188,6 +201,7 @@ export {
   checkLoginCredentials,
   registerUser,
   fetchAllProducts,
+  fetchSearchedProducts,
   fetchProductDetails,
   fetchUserDetails,
   addProductReview,

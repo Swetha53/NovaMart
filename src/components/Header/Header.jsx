@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./Header.scss";
 import reverseLogo from "./../../assets/reverse_logo.svg";
 import cart from "./../../assets/cart.svg";
@@ -8,15 +8,19 @@ import Search from "./../Search/Search";
 function Header() {
   const userName = sessionStorage.getItem("userName");
   const avatar = sessionStorage.getItem("avatar");
+  const navigate = useNavigate();
+
+  const searchInputValue = (keyword) => {
+    navigate("/", { state: { keyword } });
+  };
 
   return (
-    // TODO search
     <div className="header">
       <NavLink to="">
         <img src={reverseLogo} alt="Nova Mart" className="header__logo" />
       </NavLink>
       <div className="header__search">
-        <Search />
+        <Search searchInputValue={searchInputValue} />
       </div>
       <div className="header__profile">
         {avatar ? (
