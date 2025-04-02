@@ -48,7 +48,6 @@ const AR = () => {
         id="product-demo"
         ar
         ar-modes="webxr scene-viewer quick-look"
-        ar-scale="fixed"
         camera-controls
         touch-action="pan-y"
         max-camera-orbit="auto 90deg auto"
