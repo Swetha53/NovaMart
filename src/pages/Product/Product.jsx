@@ -49,7 +49,7 @@ function Product() {
       // TODO set cart quantity in session storage so that cart icon can display that
       await updateCart(requestBody);
     } catch (err) {
-      toggleTicker(true, err.message);
+      toggleTicker(true, err && err.message ? err.message : err);
     } finally {
       // setLoading(false);
     }
@@ -66,7 +66,7 @@ function Product() {
         }
         setSelectedImages(tempProductDetails.body[0].images);
       } catch (err) {
-        toggleTicker(true, err.message);
+        toggleTicker(true, err && err.message ? err.message : err);
       } finally {
         // setLoading(false);
       }

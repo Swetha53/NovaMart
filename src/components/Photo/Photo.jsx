@@ -31,7 +31,7 @@ function Photo(props) {
     try {
       await updateCart(requestBody);
     } catch (err) {
-      toggleTicker(true, err.message);
+      toggleTicker(true, err && err.message ? err.message : err);
     } finally {
       // setLoading(false);
     }

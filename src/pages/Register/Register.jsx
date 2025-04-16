@@ -146,7 +146,7 @@ function Register() {
         };
         await registerUser(requestBody);
       } catch (err) {
-        toggleTicker(true, err.message);
+        toggleTicker(true, err && err.message ? err.message : err);
       } finally {
         // setLoading(false);
         navigate("/login");

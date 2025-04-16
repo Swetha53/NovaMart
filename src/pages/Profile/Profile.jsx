@@ -68,7 +68,7 @@ function Profile() {
         const tempUserDetails = await fetchUserDetails(userId);
         setUserDetails(tempUserDetails.body[0]);
       } catch (err) {
-        toggleTicker(true, err.message);
+        toggleTicker(true, err && err.message ? err.message : err);
       } finally {
         // setLoading(false);
       }
@@ -79,7 +79,7 @@ function Profile() {
         const tempUserReviews = await fetchUserReviews(userId);
         setReviews(tempUserReviews.body);
       } catch (err) {
-        toggleTicker(true, err.message);
+        toggleTicker(true, err && err.message ? err.message : err);
       } finally {
         // setLoading(false);
       }
@@ -94,7 +94,7 @@ function Profile() {
       const tempUserOrders = await fetchUserOrders(userId);
       setOrders(tempUserOrders.body);
     } catch (err) {
-      toggleTicker(true, err.message);
+      toggleTicker(true, err && err.message ? err.message : err);
     } finally {
       // setLoading(false);
     }
@@ -118,7 +118,7 @@ function Profile() {
         };
         await addProductReview(requestBody);
       } catch (err) {
-        toggleTicker(true, err.message);
+        toggleTicker(true, err && err.message ? err.message : err);
       } finally {
         // setLoading(false);
         setShowModal(false);

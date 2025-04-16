@@ -71,7 +71,7 @@ const Cart = () => {
       setSubtotaAmount(tempSubTotal);
       setItemCount(tempItemCount);
     } catch (err) {
-      toggleTicker(true, err.message);
+      toggleTicker(true, err && err.message ? err.message : err);
     } finally {
       // setLoading(false);
     }
@@ -81,7 +81,7 @@ const Cart = () => {
       const tempProductDetails = await fetchProductDetails(productId);
       return tempProductDetails.body[0];
     } catch (err) {
-      toggleTicker(true, err.message);
+      toggleTicker(true, err && err.message ? err.message : err);
       return {};
     } finally {
       // setLoading(false);
@@ -98,7 +98,7 @@ const Cart = () => {
     try {
       await updateCart(requestBody);
     } catch (err) {
-      toggleTicker(true, err.message);
+      toggleTicker(true, err && err.message ? err.message : err);
     } finally {
       // setLoading(false);
       loadCartDetails();
@@ -108,7 +108,7 @@ const Cart = () => {
     try {
       await removeItemFromCart(userId, productId);
     } catch (err) {
-      toggleTicker(true, err.message);
+      toggleTicker(true, err && err.message ? err.message : err);
       return {};
     } finally {
       // setLoading(false);

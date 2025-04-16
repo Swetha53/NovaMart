@@ -23,7 +23,7 @@ const Dashboard = () => {
         const tempProducts = await fetchAllProducts();
         setProducts(tempProducts.body);
       } catch (err) {
-        toggleTicker(true, err.message);
+        toggleTicker(true, err && err.message ? err.message : err);
       } finally {
         // setLoading(false);
       }
@@ -34,7 +34,7 @@ const Dashboard = () => {
         const tempProducts = await fetchSearchedProducts(data.keyword);
         setProducts(tempProducts.body);
       } catch (err) {
-        toggleTicker(true, err.message);
+        toggleTicker(true, err && err.message ? err.message : err);
       } finally {
         // setLoading(false);
       }

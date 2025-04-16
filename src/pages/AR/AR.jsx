@@ -19,7 +19,7 @@ const AR = () => {
         tempModelData.data[0].asset_url.replace(/(\.glb).*$/, ".glb");
         setModelUrl(tempModelData.data[0].asset_url);
       } catch (err) {
-        toggleTicker(true, err.message);
+        toggleTicker(true, err && err.message ? err.message : err);
       } finally {
         // setLoading(false);
       }

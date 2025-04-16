@@ -29,7 +29,7 @@ const Login = () => {
       sessionStorage.setItem("avatar", userData.body[0].avatar);
       navigate("/");
     } catch (err) {
-      toggleTicker(true, err.message);
+      toggleTicker(true, err && err.message ? err.message : err);
     } finally {
       // setLoading(false);
     }
