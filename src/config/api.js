@@ -1,8 +1,6 @@
 import axios from "axios";
 
-const IP_ADDRESS = "192.168.2.108";
-// 192.168.2.108
-// 10.200.67.24
+const IP_ADDRESS = "10.200.67.24";
 const PRODUCT_URL = `https://${IP_ADDRESS}:8080/api/products`;
 const USER_URL = `https://${IP_ADDRESS}:8085/api/users`;
 const REVIEW_URL = `https://${IP_ADDRESS}:8080/api/reviews`;

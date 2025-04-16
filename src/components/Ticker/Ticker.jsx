@@ -3,6 +3,9 @@ import "./Ticker.scss";
 
 function Ticker(props) {
   const { type, message, closeTickerHandler } = props;
+
+  setTimeout(closeTickerHandler, 2000);
+
   return (
     <div className={type == "error" ? "ticker ticker-error" : "ticker"}>
       <div>{message}</div>

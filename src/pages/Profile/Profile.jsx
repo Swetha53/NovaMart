@@ -16,6 +16,8 @@ import Ticker from "../../components/Ticker/Ticker";
 import Modal from "../../components/Modal/Modal";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
+import { sampleUser, sampleReviews, sampleOrders } from "../../config/sample";
+import Offline from "../../components/Offline/Offline";
 
 function Profile() {
   const userId = sessionStorage.getItem("userId");
@@ -51,6 +53,8 @@ function Profile() {
     },
   });
   const [forceUpdate, setForceUpdate] = useState(0);
+  const [offlineMode, setOfflineMode] = useState(false);
+
   const formInputList = {
     title,
     body,
@@ -61,6 +65,16 @@ function Profile() {
     setShowTicker(value);
     setErrorMessage(message);
   };
+  const toggleOfflineModel = (value) => {
+    setOfflineMode(true);
+    if (value == "user") {
+      setUserDetails(sampleUser[0]);
+    } else if (value == "review") {
+      setReviews(sampleReviews);
+    } else {
+      setOrders(sampleOrders);
+    }
+  };
 
   useEffect(() => {
     const loadUserDetails = async () => {
@@ -68,7 +82,10 @@ function Profile() {
         const tempUserDetails = await fetchUserDetails(userId);
         setUserDetails(tempUserDetails.body[0]);
       } catch (err) {
-        toggleTicker(true, err.message);
+        if (typeof err == "string" && err.includes("Network Error")) {
+          toggleOfflineModel("user");
+        }
+        toggleTicker(true, err && err.message ? err.message : err);
       } finally {
         // setLoading(false);
       }
@@ -79,7 +96,10 @@ function Profile() {
         const tempUserReviews = await fetchUserReviews(userId);
         setReviews(tempUserReviews.body);
       } catch (err) {
-        toggleTicker(true, err.message);
+        if (typeof err == "string" && err.includes("Network Error")) {
+          toggleOfflineModel("review");
+        }
+        toggleTicker(true, err && err.message ? err.message : err);
       } finally {
         // setLoading(false);
       }
@@ -94,7 +114,10 @@ function Profile() {
       const tempUserOrders = await fetchUserOrders(userId);
       setOrders(tempUserOrders.body);
     } catch (err) {
-      toggleTicker(true, err.message);
+      if (typeof err == "string" && err.includes("Network Error")) {
+        toggleOfflineModel("order");
+      }
+      toggleTicker(true, err && err.message ? err.message : err);
     } finally {
       // setLoading(false);
     }
@@ -118,7 +141,7 @@ function Profile() {
         };
         await addProductReview(requestBody);
       } catch (err) {
-        toggleTicker(true, err.message);
+        toggleTicker(true, err && err.message ? err.message : err);
       } finally {
         // setLoading(false);
         setShowModal(false);
@@ -160,6 +183,7 @@ function Profile() {
 
   return (
     <div className={`profile ${showModal && "profile-disable__scroll"}`}>
+      {offlineMode && <Offline />}
       {showTicker && (
         <Ticker
           type="error"
@@ -294,15 +318,21 @@ function Profile() {
             <>
               <div className="profile__tabs__main__info">
                 <div className="firstname">
-                  First Name: {userDetails.firstName}
+                  First Name: {userDetails && userDetails.firstName}
                 </div>
                 <div className="lastname">
-                  Last Name: {userDetails.lastName}
+                  Last Name: {userDetails && userDetails.lastName}
                 </div>
-                <div className="age">Age: {userDetails.age}</div>
-                <div className="gender">Gender: {userDetails.gender}</div>
-                <div className="email">Email: {userDetails.email}</div>
-                <div className="address">Address: {userDetails.address}</div>
+                <div className="age">Age: {userDetails && userDetails.age}</div>
+                <div className="gender">
+                  Gender: {userDetails && userDetails.gender}
+                </div>
+                <div className="email">
+                  Email: {userDetails && userDetails.email}
+                </div>
+                <div className="address">
+                  Address: {userDetails && userDetails.address}
+                </div>
               </div>
               <div className="profile__tabs__main__reviews">
                 <h3>Your Reviews</h3>
@@ -351,7 +381,9 @@ function Profile() {
                             className="profile__tabs__main__reviews__container__image"
                           />
                         )}
-                        <a href={"#/product/" + review.productId}>See Product</a>
+                        <a href={"#/product/" + review.productId}>
+                          See Product
+                        </a>
                       </div>
                     </div>
                   ))}

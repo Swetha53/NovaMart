@@ -12,6 +12,7 @@ import {
 } from "../../config/validation";
 import { registerUser } from "../../config/api";
 import Ticker from "../../components/Ticker/Ticker";
+import Offline from "../../components/Offline/Offline";
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -74,6 +75,8 @@ function Register() {
       validationFun: ["isEmpty"],
     },
   });
+  const [offlineMode, setOfflineMode] = useState(false);
+
   const validationFunList = {
     isEmpty,
     isUnequal,
@@ -146,16 +149,24 @@ function Register() {
         };
         await registerUser(requestBody);
       } catch (err) {
-        toggleTicker(true, err.message);
+        if (typeof err == "string" && err.includes("Network Error")) {
+          toggleOfflineModel();
+        }
+        toggleTicker(true, err && err.message ? err.message : err);
       } finally {
         // setLoading(false);
         navigate("/login");
       }
     }
   };
+  const toggleOfflineModel = () => {
+    setOfflineMode(true);
+    navigate("/login");
+  };
 
   return (
     <div className="register">
+      {offlineMode && <Offline />}
       {showTicker && (
         <Ticker
           type="error"
