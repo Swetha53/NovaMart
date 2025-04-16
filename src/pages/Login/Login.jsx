@@ -1,3 +1,4 @@
+// TODO loader
 import "./Login.scss";
 import Logo from "../../assets/logo.svg";
 import Input from "../../components/Input/Input";
@@ -7,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import Ticker from "../../components/Ticker/Ticker";
-import Offline from "../../components/Offline/Offline";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -15,17 +15,10 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showTicker, setShowTicker] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [offlineMode, setOfflineMode] = useState(false);
 
   const toggleTicker = (value, message) => {
     setShowTicker(value);
     setErrorMessage(message);
-  };
-  const toggleOfflineModel = () => {
-    setOfflineMode(true);
-    sessionStorage.setItem("userId", "demo");
-    sessionStorage.setItem("userName", "Test");
-    navigate("/");
   };
 
   const checkCredentials = async () => {
@@ -36,10 +29,7 @@ const Login = () => {
       sessionStorage.setItem("avatar", userData.body[0].avatar);
       navigate("/");
     } catch (err) {
-      if (typeof err == "string" && err.includes("Network Error")) {
-        toggleOfflineModel();
-      }
-      toggleTicker(true, err && err.message ? err.message : err);
+      toggleTicker(true, err.message);
     } finally {
       // setLoading(false);
     }
@@ -47,7 +37,6 @@ const Login = () => {
 
   return (
     <div className="login">
-      {offlineMode && <Offline />}
       {showTicker && (
         <Ticker
           type="error"

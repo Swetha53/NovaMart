@@ -10,12 +10,9 @@ import Ticker from "../../components/Ticker/Ticker";
 import FilledStar from "./../../assets/fill_star.png";
 import Star from "./../../assets/star.png";
 import Image from "./../../assets/image.png";
-import { sampleProducts } from "../../config/sample";
-import Offline from "../../components/Offline/Offline";
 
 function Product() {
   const { productId } = useParams();
-  const navigate = useNavigate();
   const userId = sessionStorage.getItem("userId");
   const [productDetails, setProductDetails] = useState([]);
   const [selectedImages, setSelectedImages] = useState([
@@ -27,7 +24,7 @@ function Product() {
   const [quantity, setQuanity] = useState(1);
   const [showTicker, setShowTicker] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [offlineMode, setOfflineMode] = useState(false);
+  const navigate = useNavigate();
 
   const toggleTicker = (value, message) => {
     setShowTicker(value);
@@ -39,15 +36,6 @@ function Product() {
   const onCounterChange = (value) => {
     setQuanity(value);
   };
-  const toggleOfflineModel = () => {
-    setOfflineMode(true);
-    setProductDetails(sampleProducts[0]);
-    setAttributes(sampleProducts[0].attributes);
-    if (sampleProducts[0].images.length == 0) {
-      return;
-    }
-    setSelectedImages(sampleProducts[0].images);
-  };
 
   const addToCart = async () => {
     const requestBody = {
@@ -58,9 +46,10 @@ function Product() {
       currencyCode: productDetails.currencyCode,
     };
     try {
+      // TODO set cart quantity in session storage so that cart icon can display that
       await updateCart(requestBody);
     } catch (err) {
-      toggleTicker(true, err && err.message ? err.message : err);
+      toggleTicker(true, err.message);
     } finally {
       // setLoading(false);
     }
@@ -77,10 +66,7 @@ function Product() {
         }
         setSelectedImages(tempProductDetails.body[0].images);
       } catch (err) {
-        if (typeof err == "string" && err.includes("Network Error")) {
-          toggleOfflineModel();
-        }
-        toggleTicker(true, err && err.message ? err.message : err);
+        toggleTicker(true, err.message);
       } finally {
         // setLoading(false);
       }
@@ -91,7 +77,6 @@ function Product() {
 
   return (
     <div className="product">
-      {offlineMode && <Offline />}
       {showTicker && (
         <Ticker
           type="error"

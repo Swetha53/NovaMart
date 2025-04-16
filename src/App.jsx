@@ -2,7 +2,6 @@
 import "./App.scss";
 import { Outlet, useLocation } from "react-router-dom";
 import Header from "./components/Header/Header";
-import { useState } from "react";
 
 function App() {
   const path = useLocation().pathname;

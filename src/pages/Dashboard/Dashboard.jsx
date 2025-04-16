@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import { fetchAllProducts, fetchSearchedProducts } from "../../config/api";
 import Photo from "../../components/Photo/Photo";
 import Ticker from "../../components/Ticker/Ticker";
-import { sampleProducts } from "../../config/sample";
-import Offline from "../../components/Offline/Offline";
 
 const Dashboard = () => {
   const location = useLocation();
@@ -13,15 +11,10 @@ const Dashboard = () => {
   const [products, setProducts] = useState([]);
   const [showTicker, setShowTicker] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [offlineMode, setOfflineMode] = useState(false);
 
   const toggleTicker = (value, message) => {
     setShowTicker(value);
     setErrorMessage(message);
-  };
-  const toggleOfflineModel = () => {
-    setOfflineMode(true);
-    setProducts(sampleProducts);
   };
 
   useEffect(() => {
@@ -30,10 +23,7 @@ const Dashboard = () => {
         const tempProducts = await fetchAllProducts();
         setProducts(tempProducts.body);
       } catch (err) {
-        if (typeof err == "string" && err.includes("Network Error")) {
-          toggleOfflineModel();
-        }
-        toggleTicker(true, err && err.message ? err.message : err);
+        toggleTicker(true, err.message);
       } finally {
         // setLoading(false);
       }
@@ -44,10 +34,7 @@ const Dashboard = () => {
         const tempProducts = await fetchSearchedProducts(data.keyword);
         setProducts(tempProducts.body);
       } catch (err) {
-        if (typeof err == "string" && err.includes("Network Error")) {
-          toggleOfflineModel();
-        }
-        toggleTicker(true, err && err.message ? err.message : err);
+        toggleTicker(true, err.message);
       } finally {
         // setLoading(false);
       }
@@ -60,7 +47,6 @@ const Dashboard = () => {
   }, [data]);
   return (
     <div className="dashboard">
-      {offlineMode && <Offline />}
       {showTicker && (
         <Ticker
           type="error"
